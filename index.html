@@ -4,201 +4,76 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#070914" />
-<title>Quiz Libre — V2 Neon</title>
+<title>Quiz Libre — V3</title>
 <link rel="stylesheet" href="styles.css" />
+<style>
+/* V3 — answer modes */
+.qMetaRight{display:flex;align-items:center;gap:7px;min-width:0}
+.answerTypeBadge{padding:6px 8px;border:1px solid rgba(138,99,255,.24);border-radius:8px;background:rgba(138,99,255,.08);color:#d6cbff;font-size:8px;font-weight:950;letter-spacing:.75px;text-transform:uppercase;white-space:nowrap}
+.freeAnswerWrap{margin-top:2px;animation:feedbackIn .22s ease both}
+.freeAnswerLabel{display:block;margin:0 0 7px 2px;color:#8d9ab9;font-size:9px;font-weight:900;letter-spacing:.9px;text-transform:uppercase}
+.freeAnswerRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:stretch}
+.freeAnswerInput{width:100%;min-width:0;min-height:58px;padding:0 15px;border:1px solid rgba(116,134,187,.24);border-radius:18px;outline:none;background:linear-gradient(145deg,rgba(25,33,65,.92),rgba(14,19,41,.9));color:var(--text);font:inherit;font-size:14px;font-weight:720;box-shadow:inset 0 1px 0 rgba(255,255,255,.035);transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}
+.freeAnswerInput::placeholder{color:#667492}
+.freeAnswerInput:focus{border-color:rgba(56,231,209,.55);box-shadow:0 0 0 3px rgba(56,231,209,.08),inset 0 1px 0 rgba(255,255,255,.04)}
+.freeAnswerInput:disabled{opacity:.72;cursor:default}
+.freeAnswerBtn{min-width:92px;border:1px solid rgba(138,99,255,.48);border-radius:18px;padding:0 14px;color:white;background:linear-gradient(135deg,#7456ff,#527fff 58%,#32c9bd);box-shadow:0 10px 26px rgba(102,82,255,.2);font-size:12px;font-weight:950;transition:transform .15s ease,filter .15s ease}
+.freeAnswerBtn:active:not(:disabled){transform:scale(.97)}
+.freeAnswerBtn:disabled{opacity:.55;cursor:default}
+.freeAnswerHint{margin:8px 2px 0;color:#697795;font-size:9px;line-height:1.4}
+.freeAnswerWrap.correct .freeAnswerInput{border-color:rgba(65,231,180,.6);background:rgba(65,231,180,.07)}
+.freeAnswerWrap.wrong .freeAnswerInput{border-color:rgba(255,109,138,.58);background:rgba(255,109,138,.06)}
+@media(max-width:459px){.controls{grid-template-columns:1fr}.freeAnswerRow{grid-template-columns:1fr}.freeAnswerBtn{min-height:52px}.qMeta{align-items:flex-start}.qMetaRight{flex-direction:column;align-items:flex-end;gap:5px}}
+@media(min-width:580px){.controls{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
 </head>
 <body>
 <div class="ambient ambientOne"></div>
 <div class="ambient ambientTwo"></div>
 <div class="gridBackdrop"></div>
-
 <div class="app">
   <div class="topbar">
-    <div class="brand">
-      <div class="logo" aria-hidden="true"><span>⚡</span></div>
-      <div class="brandCopy">
-        <div class="brandName">Quiz Libre</div>
-        <div class="version"><span class="liveDot"></span> V2 • Neon build</div>
-      </div>
-    </div>
-    <button class="iconBtn" id="homeBtn" title="Accueil" aria-label="Retour à l'accueil">
-      <span aria-hidden="true">⌂</span>
-    </button>
+    <div class="brand"><div class="logo" aria-hidden="true"><span>⚡</span></div><div class="brandCopy"><div class="brandName">Quiz Libre</div><div class="version"><span class="liveDot"></span> V3 • Réponses libres</div></div></div>
+    <button class="iconBtn" id="homeBtn" title="Accueil" aria-label="Retour à l'accueil"><span aria-hidden="true">⌂</span></button>
   </div>
-
   <main id="homeScreen">
     <section class="hero">
-      <div class="heroGlow"></div>
-      <div class="heroTopline">
-        <span class="miniChip">⚡ 100% local</span>
-        <span class="miniChip ghostChip">80 questions</span>
-      </div>
-      <div class="eyebrow">Joue • apprends • recommence</div>
-      <h1>À toi de jouer <span class="wink">😏</span></h1>
+      <div class="heroGlow"></div><div class="heroTopline"><span class="miniChip">⚡ 100% local</span><span class="miniChip ghostChip">180 questions</span></div>
+      <div class="eyebrow">Joue • apprends • recommence</div><h1>À toi de jouer <span class="wink">😏</span></h1>
       <p>Choisis ton mode, lance une série et essaie de battre ton meilleur run. Les questions déjà vues restent mémorisées sur cet appareil.</p>
-
-      <div class="heroCore" aria-hidden="true">
-        <div class="coreRing ringOuter"></div>
-        <div class="coreRing ringInner"></div>
-        <div class="coreBolt">⚡</div>
-        <span class="spark sparkA"></span>
-        <span class="spark sparkB"></span>
-        <span class="spark sparkC"></span>
-      </div>
-
+      <div class="heroCore" aria-hidden="true"><div class="coreRing ringOuter"></div><div class="coreRing ringInner"></div><div class="coreBolt">⚡</div><span class="spark sparkA"></span><span class="spark sparkB"></span><span class="spark sparkC"></span></div>
       <div class="statline">
-        <div class="stat">
-          <span class="statIcon">✦</span>
-          <div><b id="statAnswered">0</b><span>réponses</span></div>
-        </div>
-        <div class="stat">
-          <span class="statIcon">◎</span>
-          <div><b id="statRate">—</b><span>réussite</span></div>
-        </div>
-        <div class="stat">
-          <span class="statIcon">🔥</span>
-          <div><b id="statBest">0</b><span>meilleure série</span></div>
-        </div>
+        <div class="stat"><span class="statIcon">✦</span><div><b id="statAnswered">0</b><span>réponses</span></div></div>
+        <div class="stat"><span class="statIcon">◎</span><div><b id="statRate">—</b><span>réussite</span></div></div>
+        <div class="stat"><span class="statIcon">🔥</span><div><b id="statBest">0</b><span>meilleure série</span></div></div>
       </div>
     </section>
-
     <section class="panel modePanel">
-      <div class="panelHeading">
-        <div>
-          <div class="panelKicker">01 • Choisis ton terrain</div>
-          <div class="panelTitle">Mode de jeu</div>
-        </div>
-        <div class="panelBadge">SELECT</div>
-      </div>
+      <div class="panelHeading"><div><div class="panelKicker">01 • Choisis ton terrain</div><div class="panelTitle">Mode de jeu</div></div><div class="panelBadge">SELECT</div></div>
       <div class="modeGrid">
-        <button class="mode active" data-mode="general">
-          <span class="modeIcon">🌍</span>
-          <span class="modeCopy"><strong>Culture générale</strong><span>Un mélange de toutes les catégories.</span></span>
-          <span class="modeCheck">✓</span>
-        </button>
-        <button class="mode" data-mode="category">
-          <span class="modeIcon altIcon">🎯</span>
-          <span class="modeCopy"><strong>Par catégorie</strong><span>Tu choisis ton terrain de jeu.</span></span>
-          <span class="modeCheck">✓</span>
-        </button>
+        <button class="mode active" data-mode="general"><span class="modeIcon">🌍</span><span class="modeCopy"><strong>Culture générale</strong><span>Un mélange de toutes les catégories.</span></span><span class="modeCheck">✓</span></button>
+        <button class="mode" data-mode="category"><span class="modeIcon altIcon">🎯</span><span class="modeCopy"><strong>Par catégorie</strong><span>Tu choisis ton terrain de jeu.</span></span><span class="modeCheck">✓</span></button>
       </div>
     </section>
-
-    <section class="panel hidden" id="categoryPanel">
-      <div class="panelHeading">
-        <div>
-          <div class="panelKicker">02 • Spécialise le run</div>
-          <div class="panelTitle">Choisis une catégorie</div>
-        </div>
-        <div class="panelBadge cyanBadge">TOPIC</div>
-      </div>
-      <div class="categoryGrid" id="categoryGrid"></div>
-    </section>
-
+    <section class="panel hidden" id="categoryPanel"><div class="panelHeading"><div><div class="panelKicker">02 • Spécialise le run</div><div class="panelTitle">Choisis une catégorie</div></div><div class="panelBadge cyanBadge">TOPIC</div></div><div class="categoryGrid" id="categoryGrid"></div></section>
     <section class="panel setupPanel">
-      <div class="panelHeading">
-        <div>
-          <div class="panelKicker">03 • Prépare la partie</div>
-          <div class="panelTitle">Réglages du run</div>
-        </div>
-        <div class="panelBadge">READY</div>
-      </div>
-
+      <div class="panelHeading"><div><div class="panelKicker">03 • Prépare la partie</div><div class="panelTitle">Réglages du run</div></div><div class="panelBadge">READY</div></div>
       <div class="controls">
-        <div class="field">
-          <label for="difficulty"><span>⚙</span> Difficulté dominante</label>
-          <div class="selectWrap">
-            <select id="difficulty">
-              <option value="mixed">🎲 Mixte</option>
-              <option value="easy">🙂 Facile</option>
-              <option value="normal">🧠 Normal</option>
-              <option value="hard">🔥 Difficile</option>
-              <option value="expert">☠️ Expert</option>
-            </select>
-          </div>
-        </div>
-        <div class="field">
-          <label for="count"><span>◫</span> Questions</label>
-          <div class="selectWrap">
-            <select id="count">
-              <option value="5">5</option>
-              <option value="10" selected>10</option>
-              <option value="20">20</option>
-            </select>
-          </div>
-        </div>
+        <div class="field"><label for="difficulty"><span>⚙</span> Difficulté dominante</label><div class="selectWrap"><select id="difficulty"><option value="mixed">🎲 Mixte</option><option value="easy">🙂 Facile</option><option value="normal">🧠 Normal</option><option value="hard">🔥 Difficile</option><option value="expert">☠️ Expert</option></select></div></div>
+        <div class="field"><label for="count"><span>◫</span> Questions</label><div class="selectWrap"><select id="count"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option></select></div></div>
+        <div class="field answerModeField"><label for="answerMode"><span>✎</span> Type de réponse</label><div class="selectWrap"><select id="answerMode"><option value="qcm">🎯 QCM</option><option value="free">⌨️ Réponse libre</option><option value="mixed" selected>🎲 Mixte</option></select></div></div>
       </div>
-
-      <button class="primary launchBtn" id="startBtn">
-        <span class="primaryGlow"></span>
-        <span class="launchText">Lancer le quiz</span>
-        <span class="launchIcon">🚀</span>
-      </button>
+      <button class="primary launchBtn" id="startBtn"><span class="primaryGlow"></span><span class="launchText">Lancer le quiz</span><span class="launchIcon">🚀</span></button>
       <div class="subtle setupHint">La difficulté guide la sélection. Si le stock devient trop petit, le jeu complète intelligemment avec les niveaux voisins.</div>
     </section>
-
-    <section class="panel progressPanel">
-      <div class="progressInfo">
-        <div>
-          <div class="panelKicker">Mémoire locale</div>
-          <div class="panelTitle compactTitle">Progression</div>
-          <div class="subtle" id="seenInfo">0 question vue.</div>
-        </div>
-        <div class="memoryOrb" aria-hidden="true"><span>◉</span></div>
-      </div>
-      <button class="secondary danger" id="resetBtn">Réinitialiser les questions vues</button>
-    </section>
+    <section class="panel progressPanel"><div class="progressInfo"><div><div class="panelKicker">Mémoire locale</div><div class="panelTitle compactTitle">Progression</div><div class="subtle" id="seenInfo">0 question vue.</div></div><div class="memoryOrb" aria-hidden="true"><span>◉</span></div></div><button class="secondary danger" id="resetBtn">Réinitialiser les questions vues</button></section>
   </main>
-
-  <main id="gameScreen" class="hidden">
-    <div class="gameHeader">
-      <div class="counter" id="gameCounter">1/10</div>
-      <div class="progressWrap" aria-label="Progression de la partie">
-        <div class="progressTrackGlow"></div>
-        <div class="progress" id="progress"></div>
-      </div>
-      <div class="scoreMini" id="scoreMini">0 pt</div>
-    </div>
-
-    <section class="questionCard">
-      <div class="questionGlow"></div>
-      <div class="scanlines"></div>
-      <div class="qMeta">
-        <span class="badge" id="categoryBadge">Culture</span>
-        <span class="diff" id="difficultyBadge">Normal</span>
-      </div>
-      <div class="questionLabel">QUESTION EN COURS</div>
-      <div class="question" id="questionText"></div>
-      <div class="answers" id="answers"></div>
-      <div class="feedback hidden" id="feedback"></div>
-      <button class="primary nextBtn hidden" id="nextBtn">Question suivante →</button>
-      <div class="streak" id="streak"></div>
-    </section>
-  </main>
-
-  <main id="resultScreen" class="hidden">
-    <section class="questionCard result">
-      <div class="questionGlow resultGlow"></div>
-      <div class="resultHalo" aria-hidden="true"></div>
-      <div class="resultIcon" id="resultIcon">🏆</div>
-      <div class="eyebrow">Run terminé</div>
-      <div class="bigScore" id="bigScore">0/10</div>
-      <p id="resultMessage"></p>
-      <div class="resultGrid">
-        <div class="resultStat"><span class="resultStatIcon">◎</span><b id="resultPercent">0%</b><span>réussite</span></div>
-        <div class="resultStat"><span class="resultStatIcon">🔥</span><b id="resultStreak">0</b><span>meilleure série</span></div>
-        <div class="resultStat"><span class="resultStatIcon">✦</span><b id="resultPoints">0</b><span>points</span></div>
-      </div>
-      <button class="primary replayPrimary" id="replayBtn">Rejouer avec de nouvelles questions <span>🔄</span></button>
-      <button class="secondary" id="backBtn">Retour à l'accueil</button>
-    </section>
-  </main>
-
-  <div class="footer"><span class="liveDot"></span> Quiz Libre • V2 Neon • prototype local • 80 questions embarquées</div>
+  <main id="gameScreen" class="hidden"><div class="gameHeader"><div class="counter" id="gameCounter">1/10</div><div class="progressWrap" aria-label="Progression de la partie"><div class="progressTrackGlow"></div><div class="progress" id="progress"></div></div><div class="scoreMini" id="scoreMini">0 pt</div></div><section class="questionCard"><div class="questionGlow"></div><div class="scanlines"></div><div class="qMeta"><span class="badge" id="categoryBadge">Culture</span><span class="qMetaRight"><span class="answerTypeBadge" id="answerTypeBadge">QCM</span><span class="diff" id="difficultyBadge">Normal</span></span></div><div class="questionLabel">QUESTION EN COURS</div><div class="question" id="questionText"></div><div class="answers" id="answers"></div><div class="freeAnswerWrap hidden" id="freeAnswerWrap"><label class="freeAnswerLabel" for="freeAnswerInput">Ta réponse</label><div class="freeAnswerRow"><input id="freeAnswerInput" class="freeAnswerInput" type="text" inputmode="text" autocomplete="off" autocapitalize="sentences" placeholder="Écris ta réponse…" /><button class="freeAnswerBtn" id="freeAnswerBtn" type="button">Valider</button></div><div class="freeAnswerHint">Majuscules, accents et ponctuation ne comptent pas.</div></div><div class="feedback hidden" id="feedback"></div><button class="primary nextBtn hidden" id="nextBtn">Question suivante →</button><div class="streak" id="streak"></div></section></main>
+  <main id="resultScreen" class="hidden"><section class="questionCard result"><div class="questionGlow resultGlow"></div><div class="resultHalo" aria-hidden="true"></div><div class="resultIcon" id="resultIcon">🏆</div><div class="eyebrow">Run terminé</div><div class="bigScore" id="bigScore">0/10</div><p id="resultMessage"></p><div class="resultGrid"><div class="resultStat"><span class="resultStatIcon">◎</span><b id="resultPercent">0%</b><span>réussite</span></div><div class="resultStat"><span class="resultStatIcon">🔥</span><b id="resultStreak">0</b><span>meilleure série</span></div><div class="resultStat"><span class="resultStatIcon">✦</span><b id="resultPoints">0</b><span>points</span></div></div><button class="primary replayPrimary" id="replayBtn">Rejouer avec de nouvelles questions <span>🔄</span></button><button class="secondary" id="backBtn">Retour à l'accueil</button></section></main>
+  <div class="footer"><span class="liveDot"></span> Quiz Libre • V3 • prototype local • 180 questions embarquées</div>
 </div>
-
 <div class="toast" id="toast"></div>
 <script src="questions.js"></script>
+<script src="answer-utils.js"></script>
 <script src="app.js"></script>
-</body>
-</html>
+</body></html>
