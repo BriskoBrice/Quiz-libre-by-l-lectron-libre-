@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr" data-selftest="pending">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#0b1020" />
+<title>Quiz Libre — V1 test</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><div class="logo">⚡</div><div>Quiz Libre<div class="version">V1 • prototype local</div></div></div>
+    <button class="iconBtn" id="homeBtn" title="Accueil">⌂</button>
+  </div>
+
+  <main id="homeScreen">
+    <section class="hero">
+      <div class="eyebrow">Joue • apprends • recommence</div>
+      <h1>À toi de jouer 😏</h1>
+      <p>Choisis culture générale ou une catégorie. Les questions déjà vues sont mémorisées sur cet appareil.</p>
+      <div class="statline">
+        <div class="stat"><b id="statAnswered">0</b><span>réponses</span></div>
+        <div class="stat"><b id="statRate">—</b><span>réussite</span></div>
+        <div class="stat"><b id="statBest">0</b><span>meilleure série</span></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panelTitle">Mode de jeu</div>
+      <div class="modeGrid">
+        <button class="mode active" data-mode="general"><strong>🌍 Culture générale</strong><span>Un mélange de toutes les catégories.</span></button>
+        <button class="mode" data-mode="category"><strong>🎯 Par catégorie</strong><span>Tu choisis ton terrain de jeu.</span></button>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="categoryPanel">
+      <div class="panelTitle">Choisis une catégorie</div>
+      <div class="categoryGrid" id="categoryGrid"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panelTitle">Réglages de la partie</div>
+      <div class="controls">
+        <div class="field"><label for="difficulty">Difficulté dominante</label><select id="difficulty"><option value="mixed">🎲 Mixte</option><option value="easy">🙂 Facile</option><option value="normal">🧠 Normal</option><option value="hard">🔥 Difficile</option><option value="expert">☠️ Expert</option></select></div>
+        <div class="field"><label for="count">Questions</label><select id="count"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option></select></div>
+      </div>
+      <button class="primary" id="startBtn">Lancer le quiz 🚀</button>
+      <div class="subtle" style="margin-top:10px">La difficulté influence surtout la sélection ; si le stock est petit, le jeu complète avec les niveaux voisins.</div>
+    </section>
+
+    <section class="panel">
+      <div class="panelTitle">Progression locale</div>
+      <div class="subtle" id="seenInfo">0 question vue.</div>
+      <button class="secondary danger" id="resetBtn">Réinitialiser les questions vues</button>
+    </section>
+  </main>
+
+  <main id="gameScreen" class="hidden">
+    <div class="gameHeader">
+      <div class="counter" id="gameCounter">1/10</div>
+      <div class="progressWrap"><div class="progress" id="progress"></div></div>
+      <div class="scoreMini" id="scoreMini">0 pt</div>
+    </div>
+    <section class="questionCard">
+      <div class="qMeta"><span class="badge" id="categoryBadge">Culture</span><span class="diff" id="difficultyBadge">Normal</span></div>
+      <div class="question" id="questionText"></div>
+      <div class="answers" id="answers"></div>
+      <div class="feedback hidden" id="feedback"></div>
+      <button class="primary nextBtn hidden" id="nextBtn">Question suivante →</button>
+      <div class="streak" id="streak"></div>
+    </section>
+  </main>
+
+  <main id="resultScreen" class="hidden">
+    <section class="questionCard result">
+      <div class="resultIcon" id="resultIcon">🏆</div>
+      <div class="eyebrow">Partie terminée</div>
+      <div class="bigScore" id="bigScore">0/10</div>
+      <p id="resultMessage"></p>
+      <div class="resultGrid">
+        <div class="resultStat"><b id="resultPercent">0%</b><span>réussite</span></div>
+        <div class="resultStat"><b id="resultStreak">0</b><span>meilleure série</span></div>
+        <div class="resultStat"><b id="resultPoints">0</b><span>points</span></div>
+      </div>
+      <button class="primary" id="replayBtn">Rejouer avec de nouvelles questions 🔄</button>
+      <button class="secondary" id="backBtn">Retour à l'accueil</button>
+    </section>
+  </main>
+
+  <div class="footer">Quiz Libre • V1 de test • 80 questions embarquées • fonctionne hors ligne</div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
