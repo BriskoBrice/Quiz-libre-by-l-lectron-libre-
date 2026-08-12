@@ -194,10 +194,19 @@ renderCategories();updateStatsUI();
   const unique=new Set(QUESTIONS.map(q=>q.id)).size===QUESTIONS.length;
   const valid=QUESTIONS.every(q=>CATEGORIES[q.cat]&&DNAME[q.diff]&&q.opts.length===4&&Number.isInteger(q.a)&&q.a>=0&&q.a<4&&q.opts[q.a]);
   const aliases=QUESTIONS.every(q=>q.accepted===undefined||(Array.isArray(q.accepted)&&q.accepted.every(a=>typeof a==='string'&&a.trim())));
-  const cats=Object.keys(CATEGORIES).every(c=>QUESTIONS.filter(q=>q.cat===c).length===18);
+  const cats=Object.keys(CATEGORIES).every(c=>{const list=QUESTIONS.filter(q=>q.cat===c);const d={easy:0,normal:0,hard:0,expert:0};list.forEach(q=>d[q.diff]++);return list.length===50&&d.easy===12&&d.normal===14&&d.hard===14&&d.expert===10;});
   const answerMode=!!$('#answerMode');
   const normalizer=normalizeAnswer('  Napoléon-Bonaparte! ')==='napoleon bonaparte';
   const sample={opts:['Louis XVI','Napoléon Bonaparte','Louis-Philippe','Charles X'],a:1,accepted:['Napoléon']};
   const tolerant=isFreeAnswerCorrect(sample,'NAPOLÉON')&&!isFreeAnswerCorrect(sample,'Napoléon Bonapart');
-  document.documentElement.dataset.selftest=(unique&&valid&&aliases&&cats&&answerMode&&normalizer&&tolerant&&QUESTIONS.length===180)?'ok':'fail';
+  document.documentElement.dataset.selftest=(unique&&valid&&aliases&&cats&&answerMode&&normalizer&&tolerant&&QUESTIONS.length===500)?'ok':'fail';
+})();
+
+(function(){
+ const select=document.getElementById('answerMode');
+ const cards=[...document.querySelectorAll('.answerModeCard')];
+ if(!select||!cards.length)return;
+ const sync=()=>cards.forEach(b=>b.classList.toggle('active',b.dataset.answerMode===select.value));
+ cards.forEach(b=>b.addEventListener('click',()=>{select.value=b.dataset.answerMode;select.dispatchEvent(new Event('change',{bubbles:true}));sync();}));
+ sync();
 })();
