@@ -1,0 +1,15 @@
+const assert=require('assert');
+const utils=require('../answer-utils.js');
+assert.equal(utils.normalizeAnswer('  Napoléon-Bonaparte! '),'napoleon bonaparte');
+const q={opts:['Louis XVI','Napoléon Bonaparte','Louis-Philippe','Charles X'],a:1,accepted:['Napoléon','Napoleon']};
+assert.equal(utils.isFreeAnswerCorrect(q,'NAPOLÉON'),true);
+assert.equal(utils.isFreeAnswerCorrect(q,'napoleon bonaparte'),true);
+assert.equal(utils.isFreeAnswerCorrect(q,'Napoléon-Bonaparte !'),true);
+assert.equal(utils.isFreeAnswerCorrect(q,'Napoléon Bonapart'),false);
+assert.deepStrictEqual(utils.assignAnswerTypes(5,'qcm'),['qcm','qcm','qcm','qcm','qcm']);
+assert.deepStrictEqual(utils.assignAnswerTypes(3,'free'),['free','free','free']);
+const mixed=utils.assignAnswerTypes(10,'mixed');
+assert.equal(mixed.length,10);
+assert.equal(mixed.filter(x=>x==='free').length,5);
+assert.equal(mixed.filter(x=>x==='qcm').length,5);
+console.log('PASS answer-utils-v4: tolérance B et modes QCM/libre/mixte');
