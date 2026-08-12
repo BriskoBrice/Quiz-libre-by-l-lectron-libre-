@@ -1,12 +1,14 @@
 const fs=require('fs');
 const path=require('path');
 const assert=require('assert');
-const file=path.resolve(__dirname,'../dist/quiz-libre-v4-test.html');
-assert.ok(fs.existsSync(file),'Le build autonome doit exister');
+const file=path.resolve(__dirname,'../dist/quiz-libre-v4-1-test.html');
+assert.ok(fs.existsSync(file),'Le build autonome V4.1 doit exister');
 const html=fs.readFileSync(file,'utf8');
 assert.ok(html.includes('data:image/jpeg;base64,'),'Le décor doit être embarqué dans le build autonome');
 assert.ok(!/<link[^>]+rel="stylesheet"/.test(html),'Aucune CSS locale externe');
 assert.ok(!/<script src=/.test(html),'Aucun JavaScript local externe');
 assert.ok(html.includes('QUESTIONS.length===500'),'Le build autonome doit embarquer le self-test 500');
 assert.ok(html.includes('data-source="v4.css"'),'Le thème V4 doit être intégré au build');
-console.log('PASS build-v4: HTML autonome sans dépendance locale externe et thème V4 intégré');
+assert.ok(html.includes('data-source="v4-1.css"'),'Le thème V4.1 doit être intégré au build');
+assert.ok(html.includes('gameQuestionCard')&&html.includes('resultCardV41'),'Les vues V4.1 doivent être intégrées');
+console.log('PASS build-v4: HTML autonome V4.1 sans dépendance locale externe');
