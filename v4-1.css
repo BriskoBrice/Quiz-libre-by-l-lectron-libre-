@@ -1,0 +1,96 @@
+/* Quiz Libre V4.1 — Game + Results neon continuity */
+
+.gameStage,.resultStage{position:relative;isolation:isolate;min-height:calc(100vh - 88px);padding:14px 0 26px;overflow:hidden;border-radius:28px}
+.warehouseBackdrop{position:absolute;inset:-24px -20px -40px;z-index:-4;background:url('assets/warehouse-neon.jpg') center 32%/cover no-repeat;filter:saturate(.9) contrast(1.04) brightness(.42);transform:scale(1.035)}
+.gameStageShade,.resultStageShade{position:absolute;inset:0;z-index:-3;pointer-events:none;background:linear-gradient(180deg,rgba(1,4,12,.55),rgba(2,6,18,.77) 31%,rgba(2,5,15,.92) 70%,#02040b 100%),radial-gradient(circle at 15% 18%,rgba(183,51,255,.16),transparent 34%),radial-gradient(circle at 88% 34%,rgba(31,217,255,.12),transparent 31%)}
+.gameNeonRail,.resultBeam{position:absolute;z-index:-2;pointer-events:none;border-radius:999px;filter:blur(.2px);opacity:.7}
+.gameNeonRailA{width:220px;height:2px;top:90px;left:-42px;transform:rotate(-12deg);background:#da43ff;box-shadow:0 0 10px #da43ff,0 0 28px rgba(218,67,255,.55)}
+.gameNeonRailB{width:250px;height:2px;right:-70px;top:168px;transform:rotate(13deg);background:#32e8ff;box-shadow:0 0 10px #32e8ff,0 0 30px rgba(50,232,255,.52)}
+
+.gameHud{position:relative;z-index:2;margin:0 8px 12px;padding:9px 10px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;border:1px solid rgba(93,157,255,.24);border-radius:18px;background:linear-gradient(145deg,rgba(3,9,25,.84),rgba(4,8,20,.72));box-shadow:0 14px 34px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.035);backdrop-filter:blur(14px)}
+.gameHud .counter,.gameHud .scoreMini{min-width:54px;text-align:center;padding:8px 9px;border-radius:12px;border:1px solid rgba(119,86,255,.22);background:rgba(8,13,34,.72);font-size:11px;font-weight:950;color:#e9ecff;letter-spacing:.3px}
+.gameHud .scoreMini{border-color:rgba(48,226,255,.22);color:#b9f8ff}
+.gameHud .progressWrap{height:8px;border-radius:999px;background:rgba(2,5,14,.82);border:1px solid rgba(255,255,255,.05);overflow:hidden;box-shadow:inset 0 2px 5px rgba(0,0,0,.45)}
+.gameHud .progress{height:100%;border-radius:inherit;background:linear-gradient(90deg,#2be1ff 0%,#805dff 52%,#d83dff 100%);box-shadow:0 0 12px rgba(63,224,255,.45),0 0 22px rgba(185,63,255,.25);transition:width .3s ease}
+
+.gameQuestionCard{position:relative;z-index:2;margin:0 8px;padding:20px 16px 18px;min-height:520px;border-radius:26px;border:1px solid rgba(103,145,255,.26);background:linear-gradient(155deg,rgba(7,13,31,.93),rgba(3,7,20,.96) 62%,rgba(4,7,18,.98));box-shadow:0 28px 62px rgba(0,0,0,.50),inset 0 1px 0 rgba(255,255,255,.04),inset 0 0 70px rgba(70,65,180,.045);backdrop-filter:blur(18px);overflow:hidden}
+.gameQuestionCard:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 0 28%,rgba(255,255,255,.018) 29% 30%,transparent 31%),radial-gradient(circle at 8% 0%,rgba(199,52,255,.12),transparent 29%),radial-gradient(circle at 98% 18%,rgba(42,221,255,.10),transparent 31%)}
+.gameQuestionCard:after{content:"";position:absolute;left:16px;right:16px;top:0;height:1px;background:linear-gradient(90deg,transparent,#d94cff 24%,#57dfff 70%,transparent);box-shadow:0 0 14px rgba(94,213,255,.55)}
+.gameCardRivet{position:absolute;width:5px;height:5px;border-radius:50%;top:12px;background:#52617d;box-shadow:inset 0 1px 1px rgba(255,255,255,.4),0 0 7px rgba(63,224,255,.2)}
+.gameCardRivetA{left:14px}.gameCardRivetB{right:14px}
+.gameQuestionCard .scanlines{opacity:.065;mix-blend-mode:screen}
+.gameQuestionCard .questionGlow{background:radial-gradient(circle,rgba(135,70,255,.17),transparent 67%)}
+.gameQuestionCard .qMeta{position:relative;z-index:2;margin-bottom:17px}
+.gameQuestionCard .badge,.gameQuestionCard .answerTypeBadge,.gameQuestionCard .diff{backdrop-filter:blur(9px)}
+.gameQuestionCard .badge{border-color:rgba(45,221,255,.28);background:rgba(36,172,219,.08);color:#bffaff;box-shadow:0 0 16px rgba(47,221,255,.07)}
+.gameQuestionCard .answerTypeBadge{border-color:rgba(184,74,255,.28);background:rgba(149,56,255,.09);color:#e8ccff}
+.gameQuestionCard .diff{border-color:rgba(255,255,255,.08);background:rgba(255,255,255,.035)}
+.gameQuestionCard .questionLabel{position:relative;z-index:2;margin-top:6px;color:#9469ff;font-size:9px;font-weight:950;letter-spacing:1.8px;text-transform:uppercase}
+.gameQuestionCard .question{position:relative;z-index:2;margin:10px 0 20px;font-size:clamp(24px,6.6vw,38px);line-height:1.12;font-weight:950;letter-spacing:-.9px;color:#fbfcff;text-wrap:balance;text-shadow:0 2px 12px rgba(0,0,0,.4)}
+
+.gameQuestionCard .answers{position:relative;z-index:2;display:grid;gap:10px}
+.gameQuestionCard .answer{min-height:67px;padding:12px 13px;display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:11px;border-radius:17px;border:1px solid rgba(91,130,196,.22);background:linear-gradient(145deg,rgba(15,24,51,.93),rgba(6,11,29,.96));color:#eef3ff;text-align:left;box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 9px 20px rgba(0,0,0,.16);transition:transform .15s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease}
+.gameQuestionCard .answer:not(:disabled):active{transform:scale(.985)}
+.gameQuestionCard .answer .letter{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;border:1px solid rgba(150,80,255,.28);background:rgba(128,66,255,.09);font-size:11px;font-weight:950;color:#d9caff;box-shadow:0 0 12px rgba(159,62,255,.08)}
+.gameQuestionCard .answer.correct{border-color:rgba(50,242,192,.66);background:linear-gradient(145deg,rgba(18,77,69,.68),rgba(5,30,34,.94));box-shadow:0 0 0 1px rgba(50,242,192,.10),0 0 26px rgba(50,242,192,.18),inset 0 1px 0 rgba(255,255,255,.04)}
+.gameQuestionCard .answer.correct .letter{color:#baffed;border-color:rgba(65,243,191,.54);background:rgba(50,242,192,.11);box-shadow:0 0 16px rgba(50,242,192,.18)}
+.gameQuestionCard .answer.wrong{border-color:rgba(255,80,135,.62);background:linear-gradient(145deg,rgba(94,19,49,.66),rgba(37,7,25,.94));box-shadow:0 0 0 1px rgba(255,80,135,.08),0 0 24px rgba(255,65,132,.15)}
+.gameQuestionCard .answer.wrong .letter{color:#ffd0df;border-color:rgba(255,86,145,.5);background:rgba(255,70,130,.10)}
+
+.gameQuestionCard .freeAnswerWrap{position:relative;z-index:2;padding:14px;border:1px solid rgba(101,126,205,.19);border-radius:20px;background:rgba(3,8,24,.62);box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
+.gameQuestionCard .freeAnswerInput{min-height:60px;border-radius:15px;background:rgba(8,15,38,.94);border-color:rgba(94,139,220,.26)}
+.gameQuestionCard .freeAnswerBtn{border-radius:15px}
+.gameQuestionCard .freeAnswerWrap.correct{border-color:rgba(53,239,190,.46);box-shadow:0 0 24px rgba(50,242,192,.10)}
+.gameQuestionCard .freeAnswerWrap.wrong{border-color:rgba(255,83,140,.43);box-shadow:0 0 22px rgba(255,77,136,.09)}
+.gameQuestionCard .feedback{position:relative;z-index:2;margin-top:13px;border-radius:17px;backdrop-filter:blur(10px)}
+.gameQuestionCard .feedback.good{border-color:rgba(54,238,191,.42);background:linear-gradient(145deg,rgba(13,58,54,.77),rgba(4,21,27,.88));box-shadow:0 0 24px rgba(48,233,186,.10)}
+.gameQuestionCard .feedback.bad{border-color:rgba(255,80,137,.39);background:linear-gradient(145deg,rgba(75,17,42,.75),rgba(28,5,19,.9));box-shadow:0 0 22px rgba(255,72,129,.09)}
+.gameQuestionCard .nextBtn{position:relative;z-index:2;margin-top:12px;min-height:58px}
+.gameQuestionCard .streak{position:relative;z-index:2;min-height:20px;margin-top:10px;color:#ffcf67;font-size:11px;font-weight:900;text-align:center;text-shadow:0 0 12px rgba(255,173,61,.25)}
+
+.gameQuestionCard.is-entering{animation:v41CardEnter .28s cubic-bezier(.2,.8,.2,1) both}
+.gameQuestionCard.is-correct{animation:v41CorrectPulse .42s ease both}
+.gameQuestionCard.is-wrong{animation:v41WrongShake .26s ease both}
+@keyframes v41CardEnter{from{opacity:.62;transform:translateY(10px) scale(.992)}to{opacity:1;transform:none}}
+@keyframes v41CorrectPulse{0%,100%{box-shadow:0 28px 62px rgba(0,0,0,.50),inset 0 1px 0 rgba(255,255,255,.04)}45%{box-shadow:0 28px 62px rgba(0,0,0,.50),0 0 0 1px rgba(60,242,194,.20),0 0 38px rgba(46,238,191,.18),inset 0 1px 0 rgba(255,255,255,.04)}}
+@keyframes v41WrongShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}55%{transform:translateX(3px)}80%{transform:translateX(-1px)}}
+
+.resultStage{display:grid;align-items:center;padding-top:20px}
+.resultWarehouseBackdrop{background-position:center 42%;filter:saturate(.95) contrast(1.08) brightness(.34)}
+.resultStageShade{background:linear-gradient(180deg,rgba(1,4,12,.52),rgba(3,4,16,.82) 38%,rgba(2,3,12,.97) 100%),radial-gradient(circle at 50% 40%,rgba(128,73,255,.20),transparent 32%),radial-gradient(circle at 54% 48%,rgba(36,218,255,.12),transparent 42%)}
+.resultBeamA{width:330px;height:2px;left:-110px;top:120px;transform:rotate(24deg);background:#ce3dff;box-shadow:0 0 12px #ce3dff,0 0 36px rgba(206,61,255,.42)}
+.resultBeamB{width:330px;height:2px;right:-120px;top:155px;transform:rotate(-20deg);background:#35ddff;box-shadow:0 0 12px #35ddff,0 0 36px rgba(53,221,255,.40)}
+.resultCardV41{position:relative;z-index:2;margin:0 8px;padding:30px 17px 20px;border-radius:28px;border:1px solid rgba(109,132,245,.26);background:linear-gradient(155deg,rgba(8,13,34,.94),rgba(3,6,19,.98));box-shadow:0 30px 70px rgba(0,0,0,.56),inset 0 1px 0 rgba(255,255,255,.04);overflow:hidden;text-align:center;backdrop-filter:blur(18px)}
+.resultCardV41:before{content:"";position:absolute;left:10%;right:10%;top:0;height:1px;background:linear-gradient(90deg,transparent,#d941ff,#3ce4ff,transparent);box-shadow:0 0 16px rgba(90,215,255,.48)}
+.resultCardV41 .resultHalo{width:190px;height:190px;left:50%;top:25px;transform:translateX(-50%);background:radial-gradient(circle,rgba(130,78,255,.23),rgba(45,210,255,.07) 42%,transparent 69%);filter:blur(4px)}
+.resultCardV41 .resultIcon{position:relative;z-index:2;width:76px;height:76px;margin:0 auto 14px;display:grid;place-items:center;border-radius:24px;border:1px solid rgba(98,223,255,.28);background:linear-gradient(145deg,rgba(121,64,255,.20),rgba(16,80,104,.16));box-shadow:0 0 28px rgba(100,80,255,.14);font-size:39px}
+.resultCardV41 .eyebrow{position:relative;z-index:2;color:#b768ff;letter-spacing:2px}
+.resultCardV41 .bigScore{position:relative;z-index:2;margin:9px 0 4px;font-size:clamp(62px,19vw,104px);line-height:.9;font-weight:1000;letter-spacing:-5px;color:#f7fbff;text-shadow:0 0 9px rgba(72,222,255,.28),0 0 30px rgba(165,61,255,.20)}
+.resultCardV41 #resultMessage{position:relative;z-index:2;max-width:470px;margin:16px auto 18px;color:#a8b5d3;font-size:13px;line-height:1.55}
+.resultCardV41 .resultGrid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:18px 0}
+.resultCardV41 .resultStat{min-width:0;padding:13px 6px;border-radius:16px;border:1px solid rgba(80,150,230,.20);background:linear-gradient(145deg,rgba(9,18,42,.88),rgba(3,8,23,.91));box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
+.resultCardV41 .resultStatIcon{color:#56e5ff;text-shadow:0 0 11px rgba(59,222,255,.3)}
+.resultCardV41 .resultStat b{display:block;margin-top:5px;font-size:21px;font-weight:950}
+.resultCardV41 .resultStat span:last-child{display:block;margin-top:3px;color:#7785a8;font-size:8px;line-height:1.15}
+.resultCardV41 .replayPrimary{position:relative;z-index:2;min-height:60px;margin-top:4px;border-radius:17px}
+.resultCardV41 #backBtn{position:relative;z-index:2;margin-top:9px;min-height:52px;border-color:rgba(103,120,190,.24);background:rgba(3,8,22,.74)}
+
+@media(max-width:480px){
+  .gameStage,.resultStage{margin-left:-2px;margin-right:-2px;border-radius:24px;padding-top:10px}
+  .gameHud{margin:0 4px 9px;gap:7px;padding:8px}
+  .gameHud .counter,.gameHud .scoreMini{min-width:49px;padding:7px 6px;font-size:10px}
+  .gameQuestionCard{margin:0 4px;padding:18px 13px 16px;min-height:500px;border-radius:23px}
+  .gameQuestionCard .question{font-size:7.2vw;line-height:1.13;margin-bottom:18px}
+  .gameQuestionCard .answer{min-height:64px;padding:10px 11px;grid-template-columns:35px minmax(0,1fr);gap:9px}
+  .gameQuestionCard .answer .letter{width:32px;height:32px}
+  .resultCardV41{margin:0 4px;padding:27px 13px 17px;border-radius:24px}
+  .resultCardV41 .bigScore{font-size:20vw;letter-spacing:-3px}
+  .resultCardV41 .resultGrid{gap:6px}
+  .resultCardV41 .resultStat{padding:12px 4px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .gameQuestionCard.is-entering,.gameQuestionCard.is-correct,.gameQuestionCard.is-wrong{animation:none!important}
+  .gameHud .progress{transition:none!important}
+  .gameNeonRail,.resultBeam{filter:none}
+}
