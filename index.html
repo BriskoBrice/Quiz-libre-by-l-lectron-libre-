@@ -3,95 +3,81 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<meta name="theme-color" content="#0b1020" />
-<title>Quiz Libre — V1 test</title>
+<meta name="theme-color" content="#070914" />
+<title>Quiz Libre — V4 Entrepôt • 500 questions</title>
 <link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="v3.css" />
+<link rel="stylesheet" href="v4.css" />
 </head>
 <body>
+
+<div class="ambient ambientOne"></div>
+<div class="ambient ambientTwo"></div>
+<div class="gridBackdrop"></div>
 <div class="app">
-  <div class="topbar">
-    <div class="brand"><div class="logo">⚡</div><div>Quiz Libre<div class="version">V1 • prototype local</div></div></div>
-    <button class="iconBtn" id="homeBtn" title="Accueil">⌂</button>
+  <div class="topbar cleanTopbar">
+    <div class="brand cleanBrand" aria-label="Quiz Libre"><div class="logo" aria-hidden="true"><span>⚡</span></div></div>
+    <button class="iconBtn" id="homeBtn" title="Accueil" aria-label="Retour à l'accueil"><span aria-hidden="true">⌂</span></button>
   </div>
-
   <main id="homeScreen">
-    <section class="hero">
-      <div class="eyebrow">Joue • apprends • recommence</div>
-      <h1>À toi de jouer 😏</h1>
-      <p>Choisis culture générale ou une catégorie. Les questions déjà vues sont mémorisées sur cet appareil.</p>
-      <div class="statline">
-        <div class="stat"><b id="statAnswered">0</b><span>réponses</span></div>
-        <div class="stat"><b id="statRate">—</b><span>réussite</span></div>
-        <div class="stat"><b id="statBest">0</b><span>meilleure série</span></div>
+    <section class="hero cleanHero">
+      <div class="cleanHeroShade"></div>
+      <div class="cleanHeroBrand">
+        <div class="cleanQuiz">QUIZ</div>
+        <div class="cleanLibre">LIBRE</div>
+        <div class="cleanSignature">L’électron libre</div>
+      </div>
+      <div class="cleanHeroMeta">500 QUESTIONS <span>•</span> 10 CATÉGORIES</div>
+      <div class="statline cleanStats">
+        <div class="stat"><span class="statIcon">✦</span><div><b id="statAnswered">0</b><span>réponses</span></div></div>
+        <div class="stat"><span class="statIcon">◎</span><div><b id="statRate">—</b><span>réussite</span></div></div>
+        <div class="stat"><span class="statIcon">🔥</span><div><b id="statBest">0</b><span>meilleure série</span></div></div>
       </div>
     </section>
-
-    <section class="panel">
-      <div class="panelTitle">Mode de jeu</div>
+    <section class="panel modePanel">
+      <div class="panelHeading"><div><div class="panelKicker">01 • Choisis ton terrain</div><div class="panelTitle">Mode de jeu</div></div><div class="panelBadge">SELECT</div></div>
       <div class="modeGrid">
-        <button class="mode active" data-mode="general"><strong>🌍 Culture générale</strong><span>Un mélange de toutes les catégories.</span></button>
-        <button class="mode" data-mode="category"><strong>🎯 Par catégorie</strong><span>Tu choisis ton terrain de jeu.</span></button>
+        <button class="mode active" data-mode="general"><span class="modeIcon">🌍</span><span class="modeCopy"><strong>Culture générale</strong><span>Un mélange de toutes les catégories.</span></span><span class="modeCheck">✓</span></button>
+        <button class="mode" data-mode="category"><span class="modeIcon altIcon">🎯</span><span class="modeCopy"><strong>Par catégorie</strong><span>Tu choisis ton terrain de jeu.</span></span><span class="modeCheck">✓</span></button>
       </div>
     </section>
-
-    <section class="panel hidden" id="categoryPanel">
-      <div class="panelTitle">Choisis une catégorie</div>
-      <div class="categoryGrid" id="categoryGrid"></div>
-    </section>
-
-    <section class="panel">
-      <div class="panelTitle">Réglages de la partie</div>
+    <section class="panel hidden" id="categoryPanel"><div class="panelHeading"><div><div class="panelKicker">02 • Spécialise le run</div><div class="panelTitle">Choisis une catégorie</div></div><div class="panelBadge cyanBadge">TOPIC</div></div><div class="categoryGrid" id="categoryGrid"></div></section>
+    <section class="panel setupPanel">
+      <div class="panelHeading"><div><div class="panelKicker">03 • Prépare la partie</div><div class="panelTitle">Réglages du run</div></div><div class="panelBadge">READY</div></div>
       <div class="controls">
-        <div class="field"><label for="difficulty">Difficulté dominante</label><select id="difficulty"><option value="mixed">🎲 Mixte</option><option value="easy">🙂 Facile</option><option value="normal">🧠 Normal</option><option value="hard">🔥 Difficile</option><option value="expert">☠️ Expert</option></select></div>
-        <div class="field"><label for="count">Questions</label><select id="count"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option></select></div>
+        <div class="field"><label for="difficulty"><span>⚙</span> Difficulté dominante</label><div class="selectWrap"><select id="difficulty"><option value="mixed">🎲 Mixte</option><option value="easy">🙂 Facile</option><option value="normal">🧠 Normal</option><option value="hard">🔥 Difficile</option><option value="expert">☠️ Expert</option></select></div></div>
+        <div class="field"><label for="count"><span>◫</span> Questions</label><div class="selectWrap"><select id="count"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option></select></div></div>
+        <div class="field answerModeField"><label for="answerMode"><span>✎</span> Type de réponse</label>
+          <div class="answerModeCards" role="group" aria-label="Type de réponse">
+            <button type="button" class="answerModeCard" data-answer-mode="qcm"><span>▦</span><b>QCM</b></button>
+            <button type="button" class="answerModeCard" data-answer-mode="free"><span>✎</span><b>Réponse libre</b></button>
+            <button type="button" class="answerModeCard active" data-answer-mode="mixed"><span>⤨</span><b>Mixte</b></button>
+          </div>
+          <div class="selectWrap hiddenAnswerSelect"><select id="answerMode"><option value="qcm">🎯 QCM</option><option value="free">⌨️ Réponse libre</option><option value="mixed" selected>🎲 Mixte</option></select></div>
+        </div>
       </div>
-      <button class="primary" id="startBtn">Lancer le quiz 🚀</button>
-      <div class="subtle" style="margin-top:10px">La difficulté influence surtout la sélection ; si le stock est petit, le jeu complète avec les niveaux voisins.</div>
+      <button class="primary launchBtn" id="startBtn"><span class="primaryGlow"></span><span class="launchText">Lancer le quiz</span><span class="launchIcon">🚀</span></button>
+      <div class="subtle setupHint">La difficulté guide la sélection. Si le stock devient trop petit, le jeu complète intelligemment avec les niveaux voisins.</div>
     </section>
-
-    <section class="panel">
-      <div class="panelTitle">Progression locale</div>
-      <div class="subtle" id="seenInfo">0 question vue.</div>
-      <button class="secondary danger" id="resetBtn">Réinitialiser les questions vues</button>
-    </section>
+    <section class="panel progressPanel"><div class="progressInfo"><div><div class="panelKicker">Mémoire locale</div><div class="panelTitle compactTitle">Progression</div><div class="subtle" id="seenInfo">0 question vue.</div></div><div class="memoryOrb" aria-hidden="true"><span>◉</span></div></div><button class="secondary danger" id="resetBtn">Réinitialiser les questions vues</button></section>
   </main>
-
-  <main id="gameScreen" class="hidden">
-    <div class="gameHeader">
-      <div class="counter" id="gameCounter">1/10</div>
-      <div class="progressWrap"><div class="progress" id="progress"></div></div>
-      <div class="scoreMini" id="scoreMini">0 pt</div>
-    </div>
-    <section class="questionCard">
-      <div class="qMeta"><span class="badge" id="categoryBadge">Culture</span><span class="diff" id="difficultyBadge">Normal</span></div>
-      <div class="question" id="questionText"></div>
-      <div class="answers" id="answers"></div>
-      <div class="feedback hidden" id="feedback"></div>
-      <button class="primary nextBtn hidden" id="nextBtn">Question suivante →</button>
-      <div class="streak" id="streak"></div>
-    </section>
-  </main>
-
-  <main id="resultScreen" class="hidden">
-    <section class="questionCard result">
-      <div class="resultIcon" id="resultIcon">🏆</div>
-      <div class="eyebrow">Partie terminée</div>
-      <div class="bigScore" id="bigScore">0/10</div>
-      <p id="resultMessage"></p>
-      <div class="resultGrid">
-        <div class="resultStat"><b id="resultPercent">0%</b><span>réussite</span></div>
-        <div class="resultStat"><b id="resultStreak">0</b><span>meilleure série</span></div>
-        <div class="resultStat"><b id="resultPoints">0</b><span>points</span></div>
-      </div>
-      <button class="primary" id="replayBtn">Rejouer avec de nouvelles questions 🔄</button>
-      <button class="secondary" id="backBtn">Retour à l'accueil</button>
-    </section>
-  </main>
-
-  <div class="footer">Quiz Libre • V1 de test • 80 questions embarquées • fonctionne hors ligne</div>
+  <main id="gameScreen" class="hidden"><div class="gameHeader"><div class="counter" id="gameCounter">1/10</div><div class="progressWrap" aria-label="Progression de la partie"><div class="progressTrackGlow"></div><div class="progress" id="progress"></div></div><div class="scoreMini" id="scoreMini">0 pt</div></div><section class="questionCard"><div class="questionGlow"></div><div class="scanlines"></div><div class="qMeta"><span class="badge" id="categoryBadge">Culture</span><span class="qMetaRight"><span class="answerTypeBadge" id="answerTypeBadge">QCM</span><span class="diff" id="difficultyBadge">Normal</span></span></div><div class="questionLabel">QUESTION EN COURS</div><div class="question" id="questionText"></div><div class="answers" id="answers"></div><div class="freeAnswerWrap hidden" id="freeAnswerWrap"><label class="freeAnswerLabel" for="freeAnswerInput">Ta réponse</label><div class="freeAnswerRow"><input id="freeAnswerInput" class="freeAnswerInput" type="text" inputmode="text" autocomplete="off" autocapitalize="sentences" placeholder="Écris ta réponse…" /><button class="freeAnswerBtn" id="freeAnswerBtn" type="button">Valider</button></div><div class="freeAnswerHint">Majuscules, accents et ponctuation ne comptent pas.</div></div><div class="feedback hidden" id="feedback"></div><button class="primary nextBtn hidden" id="nextBtn">Question suivante →</button><div class="streak" id="streak"></div></section></main>
+  <main id="resultScreen" class="hidden"><section class="questionCard result"><div class="questionGlow resultGlow"></div><div class="resultHalo" aria-hidden="true"></div><div class="resultIcon" id="resultIcon">🏆</div><div class="eyebrow">Run terminé</div><div class="bigScore" id="bigScore">0/10</div><p id="resultMessage"></p><div class="resultGrid"><div class="resultStat"><span class="resultStatIcon">◎</span><b id="resultPercent">0%</b><span>réussite</span></div><div class="resultStat"><span class="resultStatIcon">🔥</span><b id="resultStreak">0</b><span>meilleure série</span></div><div class="resultStat"><span class="resultStatIcon">✦</span><b id="resultPoints">0</b><span>points</span></div></div><button class="primary replayPrimary" id="replayBtn">Rejouer avec de nouvelles questions <span>🔄</span></button><button class="secondary" id="backBtn">Retour à l'accueil</button></section></main>
+  <div class="footer"><span class="liveDot"></span> Quiz Libre • V4 • prototype local • 500 questions embarquées</div>
 </div>
 <div class="toast" id="toast"></div>
-<script src="questions.js"></script>
+<script src="questions/index.js"></script>
+<script src="questions/histoire.js"></script>
+<script src="questions/geographie.js"></script>
+<script src="questions/sciences.js"></script>
+<script src="questions/cinema.js"></script>
+<script src="questions/jeux.js"></script>
+<script src="questions/musique.js"></script>
+<script src="questions/tech.js"></script>
+<script src="questions/sport.js"></script>
+<script src="questions/retro.js"></script>
+<script src="questions/insolite.js"></script>
+<script src="answer-utils.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
