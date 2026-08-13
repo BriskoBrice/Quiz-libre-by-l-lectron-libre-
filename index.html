@@ -4,7 +4,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#070914" />
-<title>Quiz Libre — V4.1 Entrepôt • 500 questions</title>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>Quiz Libre — V4.2 PWA • 500 questions</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
 <link rel="stylesheet" href="styles.css" />
 <link rel="stylesheet" href="v3.css" />
 <link rel="stylesheet" href="v4.css" />
@@ -99,7 +103,7 @@
     </section>
   </main>
 
-  <div class="footer"><span class="liveDot"></span> Quiz Libre • V4.1 • 500 questions embarquées</div>
+  <div class="footer"><span class="liveDot"></span> Quiz Libre • V4.2 PWA • 500 questions embarquées</div>
 </div>
 <div class="toast" id="toast"></div>
 <script src="questions/index.js"></script>
@@ -115,5 +119,12 @@
 <script src="questions/insolite.js"></script>
 <script src="answer-utils.js"></script>
 <script src="app.js"></script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('/service-worker.js').catch(()=>{});
+  });
+}
+</script>
 </body>
 </html>
