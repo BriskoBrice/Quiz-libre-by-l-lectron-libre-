@@ -4,10 +4,15 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#070914" />
-<title>Quiz Libre — V4 Entrepôt • 500 questions</title>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>Quiz Libre — V4.2 PWA • 500 questions</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
 <link rel="stylesheet" href="styles.css" />
 <link rel="stylesheet" href="v3.css" />
 <link rel="stylesheet" href="v4.css" />
+<link rel="stylesheet" href="v4-1.css" />
 </head>
 <body>
 
@@ -61,9 +66,44 @@
     </section>
     <section class="panel progressPanel"><div class="progressInfo"><div><div class="panelKicker">Mémoire locale</div><div class="panelTitle compactTitle">Progression</div><div class="subtle" id="seenInfo">0 question vue.</div></div><div class="memoryOrb" aria-hidden="true"><span>◉</span></div></div><button class="secondary danger" id="resetBtn">Réinitialiser les questions vues</button></section>
   </main>
-  <main id="gameScreen" class="hidden"><div class="gameHeader"><div class="counter" id="gameCounter">1/10</div><div class="progressWrap" aria-label="Progression de la partie"><div class="progressTrackGlow"></div><div class="progress" id="progress"></div></div><div class="scoreMini" id="scoreMini">0 pt</div></div><section class="questionCard"><div class="questionGlow"></div><div class="scanlines"></div><div class="qMeta"><span class="badge" id="categoryBadge">Culture</span><span class="qMetaRight"><span class="answerTypeBadge" id="answerTypeBadge">QCM</span><span class="diff" id="difficultyBadge">Normal</span></span></div><div class="questionLabel">QUESTION EN COURS</div><div class="question" id="questionText"></div><div class="answers" id="answers"></div><div class="freeAnswerWrap hidden" id="freeAnswerWrap"><label class="freeAnswerLabel" for="freeAnswerInput">Ta réponse</label><div class="freeAnswerRow"><input id="freeAnswerInput" class="freeAnswerInput" type="text" inputmode="text" autocomplete="off" autocapitalize="sentences" placeholder="Écris ta réponse…" /><button class="freeAnswerBtn" id="freeAnswerBtn" type="button">Valider</button></div><div class="freeAnswerHint">Majuscules, accents et ponctuation ne comptent pas.</div></div><div class="feedback hidden" id="feedback"></div><button class="primary nextBtn hidden" id="nextBtn">Question suivante →</button><div class="streak" id="streak"></div></section></main>
-  <main id="resultScreen" class="hidden"><section class="questionCard result"><div class="questionGlow resultGlow"></div><div class="resultHalo" aria-hidden="true"></div><div class="resultIcon" id="resultIcon">🏆</div><div class="eyebrow">Run terminé</div><div class="bigScore" id="bigScore">0/10</div><p id="resultMessage"></p><div class="resultGrid"><div class="resultStat"><span class="resultStatIcon">◎</span><b id="resultPercent">0%</b><span>réussite</span></div><div class="resultStat"><span class="resultStatIcon">🔥</span><b id="resultStreak">0</b><span>meilleure série</span></div><div class="resultStat"><span class="resultStatIcon">✦</span><b id="resultPoints">0</b><span>points</span></div></div><button class="primary replayPrimary" id="replayBtn">Rejouer avec de nouvelles questions <span>🔄</span></button><button class="secondary" id="backBtn">Retour à l'accueil</button></section></main>
-  <div class="footer"><span class="liveDot"></span> Quiz Libre • V4 • prototype local • 500 questions embarquées</div>
+
+  <main id="gameScreen" class="hidden gameStage">
+    <div class="warehouseBackdrop gameWarehouseBackdrop" aria-hidden="true"></div>
+    <div class="gameStageShade" aria-hidden="true"></div>
+    <div class="gameNeonRail gameNeonRailA" aria-hidden="true"></div>
+    <div class="gameNeonRail gameNeonRailB" aria-hidden="true"></div>
+    <div class="gameHeader gameHud">
+      <div class="counter" id="gameCounter">1/10</div>
+      <div class="progressWrap" aria-label="Progression de la partie"><div class="progressTrackGlow"></div><div class="progress" id="progress"></div></div>
+      <div class="scoreMini" id="scoreMini">0 pt</div>
+    </div>
+    <section class="questionCard gameQuestionCard">
+      <div class="questionGlow"></div><div class="scanlines"></div>
+      <div class="gameCardRivet gameCardRivetA" aria-hidden="true"></div><div class="gameCardRivet gameCardRivetB" aria-hidden="true"></div>
+      <div class="qMeta"><span class="badge" id="categoryBadge">Culture</span><span class="qMetaRight"><span class="answerTypeBadge" id="answerTypeBadge">QCM</span><span class="diff" id="difficultyBadge">Normal</span></span></div>
+      <div class="questionLabel">QUESTION EN COURS</div>
+      <div class="question" id="questionText"></div>
+      <div class="answers" id="answers"></div>
+      <div class="freeAnswerWrap hidden" id="freeAnswerWrap"><label class="freeAnswerLabel" for="freeAnswerInput">Ta réponse</label><div class="freeAnswerRow"><input id="freeAnswerInput" class="freeAnswerInput" type="text" inputmode="text" autocomplete="off" autocapitalize="sentences" placeholder="Écris ta réponse…" /><button class="freeAnswerBtn" id="freeAnswerBtn" type="button">Valider</button></div><div class="freeAnswerHint">Majuscules, accents et ponctuation ne comptent pas.</div></div>
+      <div class="feedback hidden" id="feedback"></div>
+      <button class="primary nextBtn hidden" id="nextBtn">Question suivante →</button>
+      <div class="streak" id="streak"></div>
+    </section>
+  </main>
+
+  <main id="resultScreen" class="hidden resultStage">
+    <div class="warehouseBackdrop resultWarehouseBackdrop" aria-hidden="true"></div>
+    <div class="resultStageShade" aria-hidden="true"></div>
+    <div class="resultBeam resultBeamA" aria-hidden="true"></div><div class="resultBeam resultBeamB" aria-hidden="true"></div>
+    <section class="questionCard result resultCardV41">
+      <div class="questionGlow resultGlow"></div><div class="resultHalo" aria-hidden="true"></div>
+      <div class="resultIcon" id="resultIcon">🏆</div><div class="eyebrow">Run terminé</div><div class="bigScore" id="bigScore">0/10</div><p id="resultMessage"></p>
+      <div class="resultGrid"><div class="resultStat"><span class="resultStatIcon">◎</span><b id="resultPercent">0%</b><span>réussite</span></div><div class="resultStat"><span class="resultStatIcon">🔥</span><b id="resultStreak">0</b><span>meilleure série</span></div><div class="resultStat"><span class="resultStatIcon">✦</span><b id="resultPoints">0</b><span>points</span></div></div>
+      <button class="primary replayPrimary" id="replayBtn">Rejouer avec de nouvelles questions <span>🔄</span></button><button class="secondary" id="backBtn">Retour à l'accueil</button>
+    </section>
+  </main>
+
+  <div class="footer"><span class="liveDot"></span> Quiz Libre • V4.2 PWA • 500 questions embarquées</div>
 </div>
 <div class="toast" id="toast"></div>
 <script src="questions/index.js"></script>
@@ -79,5 +119,12 @@
 <script src="questions/insolite.js"></script>
 <script src="answer-utils.js"></script>
 <script src="app.js"></script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('/service-worker.js').catch(()=>{});
+  });
+}
+</script>
 </body>
 </html>

@@ -86,11 +86,22 @@ function resetQuestionUI(){
   $('#freeAnswerBtn').disabled=false;
 }
 
+function flashQuestionState(state){
+  const card=$('.gameQuestionCard');
+  if(!card)return;
+  card.classList.remove('is-entering','is-correct','is-wrong');
+  void card.offsetWidth;
+  card.classList.add(state);
+  clearTimeout(card._v41MotionTimer);
+  card._v41MotionTimer=setTimeout(()=>card.classList.remove(state),state==='is-entering'?360:520);
+}
+
 function renderQuestion(){
   locked=false;
   const q=session[idx];
   const answerType=sessionAnswerTypes[idx]||'qcm';
   resetQuestionUI();
+  flashQuestionState('is-entering');
   $('#gameCounter').textContent=`${idx+1}/${session.length}`;
   $('#progress').style.width=`${idx/session.length*100}%`;
   $('#scoreMini').textContent=score+' pt';
@@ -119,6 +130,7 @@ function renderQuestion(){
 
 function recordOutcome(ok,q,wrongLabel=''){
   if(ok){score++;streak++;bestSession=Math.max(bestSession,streak)}else streak=0;
+  flashQuestionState(ok?'is-correct':'is-wrong');
   const f=$('#feedback');
   f.className='feedback '+(ok?'good':'bad');
   const wrongTitle=wrongLabel||q.opts[q.a];

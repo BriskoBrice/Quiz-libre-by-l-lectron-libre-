@@ -9,7 +9,7 @@ html=html.replace(/<link rel="stylesheet" href="([^"]+)" \/>/g,(_,href)=>{
   return `<style data-source="${href}">\n${css}\n</style>`;
 });
 html=html.replace(/<script src="([^"]+)"><\/script>/g,(_,src)=>`<script data-source="${src}">\n${fs.readFileSync(path.join(root,src),'utf8')}\n</script>`);
-const out=path.join(root,'dist','quiz-libre-v4-test.html');
+const out=path.join(root,'dist','quiz-libre-v4-1-test.html');
 fs.mkdirSync(path.dirname(out),{recursive:true});
 fs.writeFileSync(out,html,'utf8');
 console.log(`Built ${out} (${fs.statSync(out).size} bytes)`);
