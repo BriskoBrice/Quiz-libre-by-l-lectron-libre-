@@ -1,0 +1,36 @@
+name: Android Debug APK
+
+on:
+  push:
+    branches: [v5-android-apk-offline]
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+      - name: Sync Android web assets
+        run: node scripts/sync-android-assets.js
+      - name: Run Android static tests
+        run: node tests/android-v5.test.js
+      - name: Build debug APK
+        run: gradle -p android :app:assembleDebug --stacktrace
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk quiz-libre-1.0.0-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quiz-libre-1.0.0-debug
+          path: quiz-libre-1.0.0-debug.apk
+          if-no-files-found: error
+          retention-days: 14
