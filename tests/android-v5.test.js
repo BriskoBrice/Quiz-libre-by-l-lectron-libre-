@@ -14,13 +14,16 @@ for(const f of required) assert(fs.existsSync(path.join(root,f)),`missing ${f}`)
 
 const gradle=read('android/app/build.gradle.kts');
 for(const token of ['applicationId = "fr.electronlibre.quizlibre"','compileSdk = 36','minSdk = 24','targetSdk = 36','versionCode = 1','versionName = "1.0.0"','androidx.webkit:webkit:1.16.0','androidx.core:core-splashscreen:1.2.0']) assert(gradle.includes(token),`Gradle missing ${token}`);
+assert(!gradle.includes('androidx.core:core-ktx:1.19.0'),'Do not use Core 1.19 with compileSdk 36');
+assert(!gradle.includes('androidx.activity:activity-ktx'),'Android shell does not need Activity KTX');
 
 const manifest=read('android/app/src/main/AndroidManifest.xml');
 assert(!manifest.includes('android.permission.INTERNET'),'APK must not request INTERNET');
 assert(manifest.includes('android:screenOrientation="portrait"'),'portrait orientation missing');
 
 const activity=read('android/app/src/main/java/fr/electronlibre/quizlibre/MainActivity.kt');
-for(const token of ['WebViewAssetLoader','AssetsPathHandler','javaScriptEnabled = true','domStorageEnabled = true','allowFileAccess = false','allowContentAccess = false','allowFileAccessFromFileURLs = false','allowUniversalAccessFromFileURLs = false','https://appassets.androidplatform.net/assets/www/index.html','installSplashScreen()','onBackPressedDispatcher']) assert(activity.includes(token),`MainActivity missing ${token}`);
+for(const token of ['class MainActivity : Activity()','WebViewAssetLoader','AssetsPathHandler','javaScriptEnabled = true','domStorageEnabled = true','allowFileAccess = false','allowContentAccess = false','allowFileAccessFromFileURLs = false','allowUniversalAccessFromFileURLs = false','https://appassets.androidplatform.net/assets/www/index.html','installSplashScreen()','override fun onBackPressed()']) assert(activity.includes(token),`MainActivity missing ${token}`);
+assert(!activity.includes('onBackPressedDispatcher'),'MainActivity should not require Activity KTX');
 
 const themes=read('android/app/src/main/res/values/themes.xml');
 for(const token of ['Theme.SplashScreen','windowSplashScreenBackground','windowSplashScreenAnimatedIcon','postSplashScreenTheme']) assert(themes.includes(token),`Splash theme missing ${token}`);
@@ -36,4 +39,4 @@ if(fs.existsSync(www)){
   assert(!/vercel\.app|cdn\.jsdelivr\.net/i.test(index),'Android bundle must not depend on Vercel/CDN');
   for(const f of ['questions/index.js','questions/histoire.js','questions/geographie.js','questions/sciences.js','questions/cinema.js','questions/jeux.js','questions/musique.js','questions/tech.js','questions/sport.js','questions/retro.js','questions/insolite.js','assets/warehouse-neon.jpg']) assert(fs.existsSync(path.join(www,f)),`Android bundle missing ${f}`);
 }
-console.log('OK: Quiz Libre V5 Android shell, security, splash and CI structure');
+console.log('OK: Quiz Libre V5 Android shell, API 36 dependencies, security, splash and CI structure');

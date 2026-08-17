@@ -1,19 +1,17 @@
 package fr.electronlibre.quizlibre
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
-import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewClientCompat
 
-class MainActivity : ComponentActivity() {
+class MainActivity : Activity() {
     private lateinit var webView: WebView
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -41,34 +39,29 @@ class MainActivity : ComponentActivity() {
                     view: WebView,
                     request: WebResourceRequest
                 ): WebResourceResponse? = assetLoader.shouldInterceptRequest(request.url)
-
-                @Suppress("DEPRECATION")
-                override fun shouldInterceptRequest(view: WebView, url: String): WebResourceResponse? =
-                    assetLoader.shouldInterceptRequest(Uri.parse(url))
             }
             loadUrl("https://appassets.androidplatform.net/assets/www/index.html")
         }
         setContentView(webView)
+    }
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val script = """
-                    (() => {
-                      const home = document.getElementById('homeScreen');
-                      const onHome = home && !home.classList.contains('hidden');
-                      if (!onHome && typeof showScreen === 'function') {
-                        showScreen('homeScreen');
-                        if (typeof updateStatsUI === 'function') updateStatsUI();
-                        return 'handled';
-                      }
-                      return 'exit';
-                    })();
-                """.trimIndent()
-                webView.evaluateJavascript(script) { value ->
-                    if (value == "\"exit\"") finish()
-                }
-            }
-        })
+    @Suppress("DEPRECATION")
+    override fun onBackPressed() {
+        val script = """
+            (() => {
+              const home = document.getElementById('homeScreen');
+              const onHome = home && !home.classList.contains('hidden');
+              if (!onHome && typeof showScreen === 'function') {
+                showScreen('homeScreen');
+                if (typeof updateStatsUI === 'function') updateStatsUI();
+                return 'handled';
+              }
+              return 'exit';
+            })();
+        """.trimIndent()
+        webView.evaluateJavascript(script) { value ->
+            if (value == "\"exit\"") super.onBackPressed()
+        }
     }
 
     override fun onDestroy() {
