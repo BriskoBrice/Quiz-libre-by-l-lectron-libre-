@@ -5,6 +5,9 @@ node_modules/
 dist/
 .vite/
 coverage/
+android/.gradle/
+android/**/build/
+android/app/src/main/assets/www/
 
 # Environment / secrets
 .env
