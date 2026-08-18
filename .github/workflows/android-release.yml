@@ -46,6 +46,8 @@ jobs:
           cp "$BUILD_TOOLS_DIR/zipalign" ci-signing-tools/
           cp "$BUILD_TOOLS_DIR/apksigner" ci-signing-tools/
           cp "$BUILD_TOOLS_DIR/lib/apksigner.jar" ci-signing-tools/lib/
+          if [ -d "$BUILD_TOOLS_DIR/lib64" ]; then cp -R "$BUILD_TOOLS_DIR/lib64" ci-signing-tools/; fi
+          ldd "$BUILD_TOOLS_DIR/zipalign" || true
       - uses: actions/upload-artifact@v4
         with:
           name: android-signing-tools-linux
