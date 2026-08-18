@@ -21,6 +21,10 @@ for(const rel of files){
     html=html.replace(/\n?<link rel="apple-touch-icon"[^>]*>\s*/g,'\n');
     html=html.replace(/\n?<script>\s*if\('serviceWorker' in navigator\)[\s\S]*?<\/script>\s*(?=<\/body>)/m,'\n');
     fs.writeFileSync(dest,html);
+  }else if(rel==='v4.css'){
+    let css=fs.readFileSync(src,'utf8');
+    css+='\n/* Android shell V6: lift hero content without changing PWA */\n@media(max-width:480px){.cleanHero{padding-top:245px}}\n';
+    fs.writeFileSync(dest,css);
   }else{
     fs.copyFileSync(src,dest);
   }
