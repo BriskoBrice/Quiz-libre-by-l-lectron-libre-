@@ -1,0 +1,18 @@
+name: V7 Question Bank
+
+on:
+  push:
+    branches: [v7-1000-questions]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-bank:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate V7 question bank
+        run: node tests/v7-question-bank.test.js
