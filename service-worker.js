@@ -1,4 +1,4 @@
-const CACHE_NAME='quiz-libre-v4-2-shell-v1';
+const CACHE_NAME='quiz-libre-v7-shell-v1';
 const APP_SHELL=[
   '/',
   '/index.html',
@@ -20,6 +20,17 @@ const APP_SHELL=[
   '/questions/sport.js',
   '/questions/retro.js',
   '/questions/insolite.js',
+  '/questions/v7-histoire.js',
+  '/questions/v7-geographie.js',
+  '/questions/v7-sciences.js',
+  '/questions/v7-cinema.js',
+  '/questions/v7-jeux.js',
+  '/questions/v7-musique.js',
+  '/questions/v7-tech.js',
+  '/questions/v7-sport.js',
+  '/questions/v7-retro.js',
+  '/questions/v7-insolite.js',
+  '/questions/v7-quality-fixes.js',
   '/manifest.webmanifest',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
