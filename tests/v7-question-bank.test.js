@@ -11,7 +11,8 @@ const baseFiles=[
 const v7Files=[
   'questions/v7-histoire.js','questions/v7-geographie.js','questions/v7-sciences.js',
   'questions/v7-cinema.js','questions/v7-jeux.js','questions/v7-musique.js','questions/v7-tech.js',
-  'questions/v7-sport.js','questions/v7-retro.js','questions/v7-insolite.js'
+  'questions/v7-sport.js','questions/v7-retro.js','questions/v7-insolite.js',
+  'questions/v7-quality-fixes.js'
 ];
 const files=baseFiles.concat(v7Files.filter(f=>fs.existsSync(path.join(root,f))));
 const source=files.map(f=>fs.readFileSync(path.join(root,f),'utf8')).join('\n');
