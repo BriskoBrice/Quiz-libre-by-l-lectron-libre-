@@ -17,7 +17,7 @@ replaceV7Question("V7G071",Q("V7G071","geographie","normal","Quelle capitale nor
 replaceV7Question("V7G075",Q("V7G075","geographie","normal","À quel pays appartient l’île de Java ?",["Les Philippines","La Malaisie","Le Sri Lanka","L’Indonésie"],3,"Java est l’une des principales îles de l’Indonésie.",["Indonésie","Indonesie"]));
 replaceV7Question("V7G080",Q("V7G080","geographie","hard","Quel détroit japonais sépare les îles de Honshū et Hokkaidō ?",["Le détroit de Tsugaru","Le détroit de La Pérouse","Le détroit de Corée","Le détroit de Bungo"],0,"Le détroit de Tsugaru sépare Honshū de Hokkaidō.",["Tsugaru"]));
 
-replaceV7Question("V7S055",Q("V7S055","sciences","easy","Quel est le symbole chimique du sodium ?",["S","Na","So","N"],1,"Le symbole du sodium est Na, issu du latin natrium.",["Na"]));
+replaceV7Question("V7S055",Q("V7S055","sciences","easy","Quels organes filtrent le sang et produisent l’urine ?",["Les poumons","Les reins","Le pancréas","La rate"],1,"Les reins filtrent le sang et produisent l’urine.",["Reins","Les reins"]));
 
 replaceV7Question("V7C058",Q("V7C058","cinema","easy","Quel film d’animation Pixar met en scène la famille de super-héros Parr ?",["Cars","Ratatouille","Les Indestructibles","Là-haut"],2,"Les Indestructibles suit la famille Parr, dont les membres possèdent des super-pouvoirs.",["Les Indestructibles","The Incredibles"]));
 replaceV7Question("V7C059",Q("V7C059","cinema","easy","Comment s’appelle le père de Simba dans « Le Roi Lion » ?",["Scar","Rafiki","Timon","Mufasa"],3,"Mufasa est le père de Simba et le roi de la Terre des Lions.",["Mufasa"]));
