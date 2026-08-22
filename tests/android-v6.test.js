@@ -15,7 +15,10 @@ assert(versionCodeMatch,'versionCode missing');
 assert(Number(versionCodeMatch[1])>=2,'V6+ release versionCode must stay >= 2');
 const versionNameMatch=gradle.match(/versionName\s*=\s*"([^"]+)"/);
 assert(versionNameMatch,'versionName missing');
-assert(/^1\.1\.\d+$/.test(versionNameMatch[1]),'V6+ release versionName must stay in 1.1.x during this update proof');
+const versionParts=versionNameMatch[1].match(/^(\d+)\.(\d+)\.(\d+)$/);
+assert(versionParts,'V6+ release versionName must use semantic x.y.z format');
+const [,major,minor]=versionParts.map(Number);
+assert(major>1||(major===1&&minor>=1),'V6+ release versionName must stay >= 1.1.0');
 
 const manifest=read('android/app/src/main/AndroidManifest.xml');
 assert(!manifest.includes('android.permission.INTERNET'),'V6+ must not request INTERNET');

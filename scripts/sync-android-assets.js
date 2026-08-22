@@ -7,7 +7,10 @@ const files=[
   'assets/warehouse-neon.jpg',
   'questions/index.js','questions/histoire.js','questions/geographie.js','questions/sciences.js',
   'questions/cinema.js','questions/jeux.js','questions/musique.js','questions/tech.js',
-  'questions/sport.js','questions/retro.js','questions/insolite.js'
+  'questions/sport.js','questions/retro.js','questions/insolite.js',
+  'questions/v7-histoire.js','questions/v7-geographie.js','questions/v7-sciences.js',
+  'questions/v7-cinema.js','questions/v7-jeux.js','questions/v7-musique.js','questions/v7-tech.js',
+  'questions/v7-sport.js','questions/v7-retro.js','questions/v7-insolite.js','questions/v7-quality-fixes.js'
 ];
 fs.rmSync(out,{recursive:true,force:true});
 for(const rel of files){
@@ -23,7 +26,7 @@ for(const rel of files){
     fs.writeFileSync(dest,html);
   }else if(rel==='v4.css'){
     let css=fs.readFileSync(src,'utf8');
-    css+='\n/* Android shell V6: lift hero content without changing PWA */\n@media(max-width:480px){.cleanHero{padding-top:245px}}\n';
+    css+='\n/* Android shell V6+: lift hero content without changing PWA */\n@media(max-width:480px){.cleanHero{padding-top:245px}}\n';
     fs.writeFileSync(dest,css);
   }else{
     fs.copyFileSync(src,dest);
