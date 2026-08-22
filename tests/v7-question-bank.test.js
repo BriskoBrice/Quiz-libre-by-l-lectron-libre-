@@ -48,10 +48,12 @@ for(const q of questions){
 }
 
 const normalizedQuestions=new Map();
+const duplicates=[];
 for(const q of questions){
   const key=normalize(q.q);
-  assert(!normalizedQuestions.has(key),`${q.id}: exact normalized duplicate of ${normalizedQuestions.get(key)}`);
-  normalizedQuestions.set(key,q.id);
+  if(normalizedQuestions.has(key)) duplicates.push(`${q.id} duplicates ${normalizedQuestions.get(key)}: ${q.q}`);
+  else normalizedQuestions.set(key,q.id);
 }
+assert(!duplicates.length,`Exact normalized duplicate questions:\n${duplicates.join('\n')}`);
 
 console.log('OK: Quiz Libre V7 bank = 1000 questions, 100/category, 24/28/28/20, unique IDs and structurally valid items');
