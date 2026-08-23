@@ -37,7 +37,7 @@ jobs:
           name: quiz-libre-1.1.1-release-unsigned
           path: android/app/build/outputs/apk/release/app-release-unsigned.apk
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 1
       - name: Collect Android signing tools
         run: |
           set -euo pipefail
@@ -55,4 +55,4 @@ jobs:
           name: android-signing-tools-linux
           path: ci-signing-tools
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 1
