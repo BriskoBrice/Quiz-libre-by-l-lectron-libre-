@@ -33,4 +33,4 @@ jobs:
           name: quiz-libre-1.0.0-debug
           path: quiz-libre-1.0.0-debug.apk
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 1
