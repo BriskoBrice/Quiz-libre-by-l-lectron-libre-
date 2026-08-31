@@ -36,6 +36,8 @@ jobs:
         run: node tests/android-v7.test.js
       - name: Run Android V7.1 contract
         run: node tests/android-v7-1.test.js
+      - name: Run Android V7.1 unit tests
+        run: gradle -p android :app:testDebugUnitTest --stacktrace
       - name: Build unsigned release APK
         run: gradle -p android :app:assembleRelease --stacktrace
       - uses: actions/upload-artifact@v4
