@@ -1,7 +1,7 @@
 # Quiz Libre V7.1 — Duel local 1v1
 
 Date : 2026-08-31
-Statut : design validé sur le principe, une décision UX reste à confirmer avant le plan d’implémentation
+Statut : design validé, prêt pour plan d’implémentation
 Base : `main` après intégration V7 (1000 questions)
 Branche : `v7-1-local-duel`
 
@@ -25,6 +25,8 @@ Inclus :
 - choix de catégorie alterné à chaque manche ;
 - mêmes 3 questions, même ordre et mêmes options pour les deux joueurs ;
 - résultat du premier joueur caché au second jusqu’à la troisième réponse de celui-ci ;
+- chrono de 20 secondes par question ;
+- à 0 seconde, la question est verrouillée et comptée comme incorrecte avant de passer à la suivante ;
 - 1 point par bonne réponse, 18 points maximum ;
 - égalité autorisée, sans tie-break ;
 - aucune modification des statistiques solo.
@@ -104,7 +106,13 @@ Pour éviter les incompatibilités de versions de banque, l’hôte envoie un sn
 
 ### Premier joueur
 
-Le joueur qui a choisi la catégorie répond aux 3 questions. Il peut voir après chaque réponse si sa propre réponse est correcte, mais rien n’est révélé à l’adversaire.
+Le joueur qui a choisi la catégorie répond aux 3 questions. Il dispose de 20 secondes par question. Il peut voir après chaque réponse si sa propre réponse est correcte, mais rien n’est révélé à l’adversaire.
+
+À expiration des 20 secondes :
+- la question est verrouillée ;
+- aucune réponse n’est enregistrée ;
+- la question compte comme incorrecte ;
+- le joueur voit brièvement la bonne réponse puis passe à la suivante.
 
 Après sa troisième réponse :
 - son tour est verrouillé ;
@@ -115,7 +123,7 @@ Après sa troisième réponse :
 
 ### Second joueur
 
-Le second répond aux mêmes 3 questions. Pendant ce tour, il ne reçoit :
+Le second répond aux mêmes 3 questions avec le même chrono de 20 secondes par question. Pendant ce tour, il ne reçoit :
 - ni score du premier ;
 - ni réponses choisies par le premier ;
 - ni information permettant d’en déduire le résultat.
@@ -132,6 +140,7 @@ Puis les deux écrans montrent le score cumulé et passent à la manche suivante
 
 - bonne réponse : +1 ;
 - mauvaise réponse : 0 ;
+- expiration du chrono : 0 ;
 - aucun bonus de rapidité ;
 - aucun malus ;
 - maximum : 18 points.
@@ -200,11 +209,15 @@ Le client ne calcule jamais le score officiel.
 
 Exigence centrale : aucun message nécessaire au tour du second ne contient le score du premier. Le score n’est envoyé que dans `ROUND_REVEAL` après `TURN_COMPLETE` du second.
 
+Le chrono est local à l’interface de chaque joueur, mais la soumission de chaque réponse porte l’index de question et le résultat `answered` ou `timeout`. L’hôte refuse toute réponse reçue après verrouillage de la question ou du tour.
+
 ## 14. Permissions et erreurs
 
 Les permissions Nearby sont demandées uniquement lorsque l’utilisateur entre dans `Duel local`, jamais au démarrage de Quiz Libre.
 
-Si elles sont refusées, le solo continue normalement.
+Pour le `targetSdk = 36` de V7.1, suivre la matrice officielle Nearby correspondant aux versions Android supportées : permissions Wi-Fi/Bluetooth héritées avec `maxSdkVersion`, `BLUETOOTH_ADVERTISE`, `BLUETOOTH_CONNECT`, `BLUETOOTH_SCAN`, et `NEARBY_WIFI_DEVICES` selon la version Android. `READ_EXTERNAL_STORAGE` n’est pas requis car V7.1 n’utilise que des payloads `BYTES`.
+
+Si les permissions requises sont refusées, le solo continue normalement.
 
 En cas de déconnexion :
 - la partie se met en pause ;
@@ -232,6 +245,8 @@ Les tests doivent couvrir au minimum :
 - alternance hôte/invité sur 6 manches ;
 - 3 questions distinctes sans répétition dans la partie ;
 - snapshot identique des deux côtés ;
+- chrono initialisé à 20 secondes pour chaque question ;
+- expiration = réponse incorrecte et verrouillage ;
 - score du premier impossible à lire avant la fin du second ;
 - révélation après exactement 3 réponses du second ;
 - score final identique sur les deux appareils ;
@@ -255,7 +270,3 @@ Conserver la machine d’état et le protocole, remplacer le transport Nearby pa
 ### iOS
 
 Réutiliser le contenu HTML/JS et le protocole dans une coque Swift/WKWebView. Le transport pourra être Nearby en local ou le backend Internet.
-
-## 18. Décision restante avant le plan
-
-Le design ne fixe pas encore une limite de temps par question. Ce choix doit être confirmé avant l’implémentation, car il influence la machine d’état, les tests et l’expérience de duel.
