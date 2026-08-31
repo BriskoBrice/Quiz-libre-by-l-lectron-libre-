@@ -10,7 +10,7 @@ assert(gradle.includes('versionCode = 5'),'V7.1 must use versionCode 5');
 assert(gradle.includes('versionName = "1.3.0"'),'V7.1 must use versionName 1.3.0');
 assert(gradle.includes('com.google.android.gms:play-services-nearby:19.4.0'),'Nearby 19.4.0 compatibility pin missing');
 assert(gradle.includes('isCoreLibraryDesugaringEnabled = true'),'Nearby 19.4.0 requires core library desugaring');
-assert(gradle.includes('com.android.tools:desugar_jdk_libs:2.0.3'),'desugar_jdk_libs dependency missing');
+assert(gradle.includes('com.android.tools:desugar_jdk_libs:2.1.3'),'desugar_jdk_libs 2.1.3 dependency missing');
 
 const manifest=read('android/app/src/main/AndroidManifest.xml');
 for(const p of ['BLUETOOTH_ADVERTISE','BLUETOOTH_CONNECT','BLUETOOTH_SCAN','NEARBY_WIFI_DEVICES']) {
