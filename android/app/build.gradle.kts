@@ -11,8 +11,8 @@ android {
         applicationId = "fr.electronlibre.quizlibre"
         minSdk = 24
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.2.0"
+        versionCode = 5
+        versionName = "1.3.0"
     }
 
     compileOptions {
@@ -28,4 +28,7 @@ android {
 dependencies {
     implementation("androidx.core:core-splashscreen:1.2.0")
     implementation("androidx.webkit:webkit:1.16.0")
+    implementation("com.google.android.gms:play-services-nearby:19.5.0")
+    testImplementation(kotlin("test"))
+    testImplementation("org.json:json:20250517")
 }
