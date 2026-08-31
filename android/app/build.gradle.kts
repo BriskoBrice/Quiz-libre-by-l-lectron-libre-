@@ -30,7 +30,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.2.0")
     implementation("androidx.webkit:webkit:1.16.0")
     implementation("com.google.android.gms:play-services-nearby:19.4.0")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
     testImplementation(kotlin("test"))
     testImplementation("org.json:json:20250517")
 }
