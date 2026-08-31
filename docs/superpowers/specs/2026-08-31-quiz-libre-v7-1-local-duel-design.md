@@ -1,269 +1,183 @@
 # Quiz Libre V7.1 — Duel local 1v1
 
 Date : 2026-08-31
-Statut : design validé en conversation, en attente de relecture finale avant plan d’implémentation
+Statut : design validé sur le principe, une décision UX reste à confirmer avant le plan d’implémentation
 Base : `main` après intégration V7 (1000 questions)
 Branche : `v7-1-local-duel`
 
 ## 1. Objectif
 
-Ajouter à Quiz Libre un premier mode multijoueur local inspiré du rythme d’un duel tour par tour, sans copier l’interface ni l’identité visuelle d’un jeu existant.
+Ajouter à Quiz Libre un premier mode multijoueur local en duel tour par tour, avec notre propre identité visuelle et sans modifier le moteur solo déjà validé.
 
-V7.1 doit permettre à deux téléphones Android proches de jouer un duel complet sans serveur Internet, tout en conservant le moteur solo, les 1000 questions et le fonctionnement offline déjà validés.
-
-Le design réseau doit être suffisamment découplé du transport pour permettre plus tard :
-- un vrai multijoueur Internet asynchrone ;
-- des invitations / comptes / matchmaking ;
-- une version iOS utilisant le même protocole logique.
+V7.1 doit permettre à deux téléphones Android proches de jouer sans serveur Internet. L’architecture doit séparer la logique du duel du transport afin de pouvoir remplacer plus tard Nearby par un backend Internet et réutiliser le même protocole sur iOS.
 
 ## 2. Périmètre V7.1
 
-### Inclus
-- Android uniquement pour cette version.
-- 2 joueurs exactement.
-- Deux téléphones distincts.
-- Connexion locale à proximité avec Google Nearby Connections.
-- QCM uniquement en multijoueur.
-- 6 manches.
-- 3 questions par manche.
-- 18 questions jouées par chaque joueur au maximum.
-- Choix de catégorie alterné entre les joueurs.
-- Trois catégories proposées au joueur qui a la main.
-- Les mêmes trois questions pour les deux joueurs d’une manche.
-- Score du premier joueur caché jusqu’à la fin du tour du second.
-- Révélation du résultat de la manche uniquement après les trois réponses du second joueur.
-- Score total cumulé sur 18 points maximum.
-- Égalité autorisée en fin de partie, sans tie-break en V7.1.
+Inclus :
+- Android uniquement ;
+- 2 joueurs exactement, chacun sur son téléphone ;
+- connexion locale via Google Nearby Connections ;
+- QCM uniquement ;
+- 6 manches ;
+- 3 questions par manche ;
+- 18 questions jouées par joueur sur une partie complète ;
+- 3 catégories proposées au joueur qui a la main ;
+- choix de catégorie alterné à chaque manche ;
+- mêmes 3 questions, même ordre et mêmes options pour les deux joueurs ;
+- résultat du premier joueur caché au second jusqu’à la troisième réponse de celui-ci ;
+- 1 point par bonne réponse, 18 points maximum ;
+- égalité autorisée, sans tie-break ;
+- aucune modification des statistiques solo.
 
-### Hors périmètre
-- Multijoueur Internet à distance.
-- Comptes utilisateurs.
-- Matchmaking public.
-- Classements globaux.
-- Notifications push.
-- Chat entre joueurs.
-- 3 ou 4 joueurs.
-- Réponse libre ou mode mixte en multijoueur.
-- Bonus de vitesse.
-- Publicités / AdMob.
+Hors périmètre :
+- multijoueur Internet ;
+- comptes, matchmaking, invitations à distance ;
+- notifications push ;
+- chat ;
+- 3 ou 4 joueurs ;
+- réponse libre / mode mixte ;
+- bonus de vitesse ;
+- publicités ;
 - iOS.
 
-## 3. Expérience utilisateur
+## 3. Parcours utilisateur
 
-### 3.1 Accueil
+L’accueil conserve le solo et ajoute `Duel local`.
 
-L’écran d’accueil conserve le mode solo actuel et ajoute une entrée claire :
+### Créer
 
-- `Solo`
-- `Duel local`
-
-Le duel local ne remplace ni ne modifie le comportement du solo.
-
-### 3.2 Création d’un duel
-
-Le joueur hôte :
+L’hôte :
 1. ouvre `Duel local` ;
 2. choisit `Créer un duel` ;
 3. saisit ou confirme un pseudo local ;
-4. le téléphone commence à annoncer la partie ;
-5. un écran d’attente affiche le nom de la salle locale et attend le second joueur.
+4. annonce la partie via Nearby ;
+5. attend un adversaire.
 
-Le `serviceId` Nearby utilisera l’identifiant de l’application, `fr.electronlibre.quizlibre`.
+### Rejoindre
 
-### 3.3 Rejoindre un duel
+L’invité :
+1. choisit `Rejoindre un duel` ;
+2. découvre les parties Quiz Libre proches ;
+3. sélectionne l’hôte ;
+4. les deux appareils affichent un code de vérification identique ;
+5. les deux joueurs confirment avant de lancer la partie.
 
-Le second joueur :
-1. ouvre `Duel local` ;
-2. choisit `Rejoindre un duel` ;
-3. l’application découvre les parties Quiz Libre proches ;
-4. le joueur sélectionne la partie trouvée ;
-5. les deux téléphones affichent un code de vérification identique ;
-6. la connexion n’est acceptée qu’après confirmation de ce code.
+Le `serviceId` Nearby utilisera `fr.electronlibre.quizlibre`.
 
-### 3.4 Début de partie
+## 4. Ordre des manches
 
-Pour V7.1, l’hôte commence comme joueur ayant le choix de catégorie à la manche 1.
-
-L’ordre alterne ensuite automatiquement :
-- manche 1 : hôte choisit ;
-- manche 2 : invité choisit ;
+L’hôte choisit la catégorie à la manche 1, puis le choix alterne :
+- manche 1 : hôte ;
+- manche 2 : invité ;
 - manche 3 : hôte ;
 - manche 4 : invité ;
 - manche 5 : hôte ;
 - manche 6 : invité.
 
-Ce choix est déterministe et évite une étape supplémentaire de tirage au sort en V7.1.
+Chaque joueur choisit donc exactement 3 manches sur une partie complète.
 
-## 4. Déroulement d’une manche
+## 5. Choix de catégorie
 
-### Phase A — proposition de catégories
+Le joueur ayant la main voit exactement 3 catégories distinctes parmi les 10.
 
-Le joueur qui a la main reçoit exactement 3 catégories parmi les 10 catégories Quiz Libre.
+Règles :
+- éviter de reproposer exactement le même trio que la manche précédente ;
+- favoriser des catégories moins récemment proposées lorsque possible ;
+- aucune catégorie n’est définitivement bloquée ;
+- une catégorie peut revenir plus tard dans la partie.
 
-Règles de tirage :
-- les trois catégories doivent être distinctes ;
-- éviter de proposer exactement le même trio que la manche précédente ;
-- favoriser l’alternance des catégories déjà proposées lorsque possible ;
-- une catégorie reste néanmoins réutilisable dans la même partie ;
-- aucune catégorie n’est définitivement bloquée après usage.
+Il n’y a aucun sélecteur de difficulté en multijoueur. Les questions sont tirées dans l’ensemble de la catégorie choisie, donc en difficulté mixte selon la composition réelle de la banque.
 
-Le joueur choisit une des trois catégories.
+## 6. Questions d’une manche
 
-### Phase B — sélection des questions
-
-Le téléphone hôte est autoritaire sur l’état de partie et sélectionne les trois questions de la manche.
+L’hôte est autoritaire et sélectionne 3 QCM distincts de la catégorie choisie.
 
 Contraintes :
-- 3 questions distinctes ;
-- catégorie identique à celle choisie ;
-- QCM uniquement ;
-- pas de question déjà jouée dans la même partie ;
-- le même ordre de questions et le même ordre de réponses sont utilisés sur les deux appareils.
+- aucune question déjà utilisée dans la partie ;
+- même ordre de questions sur les deux appareils ;
+- même ordre des 4 options ;
+- le second joueur doit recevoir strictement le même contenu.
 
-Pour éviter les problèmes de versions de banque, le message de manche contient un snapshot canonique des trois questions plutôt que seulement leurs IDs :
-- `id` ;
-- `cat` ;
-- `diff` ;
-- `q` ;
-- `opts` ;
-- `a` ;
-- `ex`.
+Pour éviter les incompatibilités de versions de banque, l’hôte envoie un snapshot canonique des 3 questions plutôt que seulement leurs IDs. Chaque snapshot contient au minimum : `id`, `cat`, `diff`, `q`, `opts`, `a`, `ex`.
 
-Ainsi, le téléphone hôte reste la source de vérité même si les deux installations ne possèdent pas exactement la même révision de la banque de questions.
+## 7. Déroulement d’une manche
 
-### Phase C — premier joueur
+### Premier joueur
 
-Le joueur qui a choisi la catégorie répond aux trois questions.
+Le joueur qui a choisi la catégorie répond aux 3 questions. Il peut voir après chaque réponse si sa propre réponse est correcte, mais rien n’est révélé à l’adversaire.
 
-Après chaque réponse :
-- l’interface peut afficher immédiatement si sa propre réponse est correcte ou non, comme dans le solo ;
-- le score de la manche adverse n’est évidemment pas disponible ;
-- le résultat partiel du joueur n’est pas révélé à l’adversaire.
+Après sa troisième réponse :
+- son tour est verrouillé ;
+- son résultat est conservé par l’hôte ;
+- le second joueur reçoit l’autorisation de jouer ;
+- le premier joueur passe sur un écran d’attente ;
+- le score 0/3 à 3/3 reste caché au second.
 
-À la fin de sa troisième réponse :
-- son résultat de manche est enregistré ;
-- l’adversaire reçoit l’autorisation de jouer les mêmes trois questions ;
-- le premier joueur voit un écran d’attente du type `À ton adversaire` ;
-- son score 0/3 à 3/3 reste caché à l’autre joueur.
+### Second joueur
 
-### Phase D — second joueur
+Le second répond aux mêmes 3 questions. Pendant ce tour, il ne reçoit :
+- ni score du premier ;
+- ni réponses choisies par le premier ;
+- ni information permettant d’en déduire le résultat.
 
-Le second joueur répond aux mêmes trois questions, dans le même ordre.
+### Révélation
 
-Pendant ses trois réponses :
-- il ne voit pas le score du premier joueur ;
-- il ne voit pas les choix du premier joueur ;
-- il ne reçoit aucun indice permettant de déduire son résultat.
-
-### Phase E — révélation
-
-Après la troisième réponse du second joueur uniquement, les deux téléphones affichent simultanément le résultat de la manche.
-
-Exemple :
+Après la troisième réponse du second uniquement, l’hôte envoie `ROUND_REVEAL` et les deux appareils affichent le même résultat de manche, par exemple :
 
 `Brice 2/3  ⚡  Aude 3/3`
 
-Puis :
-- score total cumulé de chaque joueur ;
-- numéro de manche ;
-- bouton / transition vers la manche suivante.
+Puis les deux écrans montrent le score cumulé et passent à la manche suivante.
 
-## 5. Score
+## 8. Score
 
-Règle V7.1 :
-- 1 bonne réponse = 1 point ;
-- mauvaise réponse = 0 ;
+- bonne réponse : +1 ;
+- mauvaise réponse : 0 ;
 - aucun bonus de rapidité ;
 - aucun malus ;
 - maximum : 18 points.
 
-À la fin de la manche 6 :
-- score le plus élevé = victoire ;
-- scores égaux = égalité ;
-- aucun tie-break dans cette version.
+Après la manche 6 : victoire, défaite ou égalité.
 
-Les statistiques solo existantes ne doivent pas être modifiées par un duel local.
+Les clés et statistiques solo existantes restent totalement indépendantes du mode duel.
 
-Le multijoueur dispose de son propre historique local minimal si nécessaire, mais V7.1 n’exige pas de statistiques multijoueur persistantes détaillées.
+## 9. Architecture
 
-## 6. Architecture technique
+Le HTML/JavaScript continue de gérer l’interface et le gameplay. Kotlin gère uniquement les capacités Android et le transport local.
 
-### 6.1 Principe
+Composants prévus :
+- `MainActivity.kt` : WebView et raccordement sécurisé ;
+- `MultiplayerManager.kt` : Nearby, découverte, connexion, envoi/réception, cycle de vie ;
+- `DuelProtocol.kt` : modèles, validation et version du protocole ;
+- `multiplayer.js` : machine d’état du duel indépendante de Nearby ;
+- `multiplayer.css` : lobby, catégories, attente, révélation, résultat final.
 
-Conserver le moteur HTML/JavaScript existant pour :
-- écrans ;
-- affichage des questions ;
-- réponses QCM ;
-- animations ;
-- résultats.
+## 10. Nearby Connections
 
-Ajouter une couche Android Kotlin dédiée au transport et à l’état réseau.
+Pour V7.1 1v1, utiliser `Strategy.P2P_POINT_TO_POINT`. Le protocole n’échange que de petits messages JSON, transportés par payloads `BYTES`.
 
-### 6.2 Composants proposés
+L’hôte annonce, l’invité découvre. Advertising et discovery sont arrêtés dès qu’ils ne servent plus.
 
-- `MainActivity.kt`
-  - conserve la WebView actuelle ;
-  - installe le bridge multijoueur sécurisé.
+La connexion doit être vérifiée par le code fourni par Nearby avant d’accepter une partie.
 
-- `MultiplayerManager.kt`
-  - encapsule Nearby Connections ;
-  - annonce / découvre ;
-  - établit et ferme les connexions ;
-  - envoie / reçoit des messages ;
-  - expose les événements nécessaires à la WebView.
+Si une future version locale passe à plus de 2 joueurs, le transport pourra migrer vers une stratégie `STAR` sans modifier le protocole logique du duel.
 
-- `DuelProtocol.kt`
-  - modèles de messages ;
-  - sérialisation / validation ;
-  - `protocolVersion`.
+## 11. Pont WebView sécurisé
 
-- `multiplayer.js`
-  - machine d’état du duel côté interface ;
-  - dialogue avec le bridge Kotlin ;
-  - ne contient aucune logique spécifique au transport Nearby.
-
-- `multiplayer.css`
-  - écrans duel ;
-  - attente ;
-  - lobby ;
-  - révélation de manche ;
-  - classement final.
-
-### 6.3 Nearby Connections
-
-Nearby Connections sera utilisé pour la connexion locale.
-
-Pour V7.1 1v1, la stratégie recommandée est `P2P_POINT_TO_POINT` car la partie ne comporte que deux appareils et le protocole échange de très petits messages.
-
-Le transport utilisera des payloads `BYTES`, adaptés aux messages courts / métadonnées.
-
-Le téléphone hôte annonce la partie ; le second téléphone découvre puis demande la connexion.
-
-La vérification de connexion doit être visible par l’utilisateur. Une connexion non vérifiée ne doit pas lancer la partie.
-
-### 6.4 Bridge WebView
-
-Le bridge natif doit être minimal et strictement limité au contenu local de confiance servi depuis :
+Le bridge ne doit être disponible que pour le contenu local de confiance servi depuis :
 
 `https://appassets.androidplatform.net/assets/www/`
 
-Interface JS vers Kotlin envisagée :
-- `createDuel(playerName)` ;
-- `discoverDuels(playerName)` ;
-- `joinDuel(endpointId)` ;
-- `confirmConnection()` ;
-- `rejectConnection()` ;
-- `sendDuelMessage(json)` ;
-- `leaveDuel()`.
+Préférence d’implémentation : utiliser un mécanisme de message WebView avec liste d’origines autorisées, par exemple `WebViewCompat.addWebMessageListener`, plutôt qu’exposer un objet Android générique à tout contenu Web.
 
-Kotlin vers JS :
-- événements sérialisés via une fonction unique telle que `window.QuizLibreMultiplayer.onNativeEvent(...)`.
+Le bridge ne transporte que les commandes nécessaires au duel : création, découverte, connexion, confirmation, message de protocole et déconnexion.
 
-Aucun bridge générique donnant accès au système de fichiers, à des URL arbitraires ou à des fonctions Android non nécessaires ne doit être exposé.
+Kotlin renvoie les événements à une entrée JS unique du type `window.QuizLibreMultiplayer.onNativeEvent(...)`.
 
-## 7. Protocole de duel
+Aucun accès au système de fichiers, à des URL arbitraires ou à d’autres fonctions Android n’est exposé.
 
-Chaque message contient au minimum :
+## 12. Protocole
+
+Chaque message contient :
 - `protocolVersion` ;
 - `matchId` ;
 - `type` ;
@@ -272,182 +186,76 @@ Chaque message contient au minimum :
 - `payload`.
 
 Types minimum :
-- `HELLO`
-- `CONNECTION_VERIFIED`
-- `PLAYER_READY`
-- `MATCH_START`
-- `CATEGORY_OPTIONS`
-- `CATEGORY_SELECTED`
-- `ROUND_QUESTIONS`
-- `TURN_COMPLETE`
-- `ROUND_REVEAL`
-- `NEXT_ROUND`
-- `MATCH_END`
-- `PLAYER_LEFT`
-- `ERROR`
+`HELLO`, `CONNECTION_VERIFIED`, `PLAYER_READY`, `MATCH_START`, `CATEGORY_OPTIONS`, `CATEGORY_SELECTED`, `ROUND_QUESTIONS`, `TURN_COMPLETE`, `ROUND_REVEAL`, `NEXT_ROUND`, `MATCH_END`, `PLAYER_LEFT`, `ERROR`.
 
-Le protocole est volontairement indépendant de Nearby. À terme, les mêmes objets pourront être transportés via un backend Internet.
+Le protocole ne dépend pas de Nearby. Une future implémentation Internet pourra transporter les mêmes messages via un backend.
 
-## 8. Autorité et anti-désynchronisation
+## 13. Autorité et anti-désynchronisation
 
-Le téléphone hôte est la source de vérité pour :
-- `matchId` ;
-- numéro de manche ;
-- joueur dont c’est le tour ;
-- catégories proposées ;
-- catégorie choisie ;
-- snapshot des questions ;
-- réponses reçues ;
-- scores de manche ;
-- scores cumulés ;
-- fin de partie.
+L’hôte est la source de vérité pour : match, manche, tour actif, catégories proposées, catégorie choisie, questions, réponses, scores et fin de partie.
 
-Le client ne décide jamais du score officiel.
+Le client ne calcule jamais le score officiel.
 
-Chaque message porte un numéro `sequence` croissant. Les messages anciens, dupliqués ou incompatibles avec l’état courant sont ignorés / rejetés.
+`sequence` est croissant. Les messages dupliqués, trop anciens, incompatibles avec `protocolVersion` ou impossibles dans l’état courant sont rejetés.
 
-## 9. Confidentialité du score pendant la manche
+Exigence centrale : aucun message nécessaire au tour du second ne contient le score du premier. Le score n’est envoyé que dans `ROUND_REVEAL` après `TURN_COMPLETE` du second.
 
-Exigence centrale : le second joueur ne doit pas connaître le résultat du premier avant d’avoir terminé ses trois questions.
+## 14. Permissions et erreurs
 
-Donc :
-- le téléphone hôte peut connaître techniquement les réponses du premier joueur ;
-- l’interface du second téléphone ne reçoit pas de `ROUND_REVEAL` avant `TURN_COMPLETE` du second ;
-- aucun champ de score du premier joueur n’est envoyé dans les messages nécessaires au tour du second ;
-- le score de manche est révélé via un message distinct après verrouillage des deux tours.
+Les permissions Nearby sont demandées uniquement lorsque l’utilisateur entre dans `Duel local`, jamais au démarrage de Quiz Libre.
 
-Cette séparation doit être couverte par des tests de protocole.
+Si elles sont refusées, le solo continue normalement.
 
-## 10. Permissions et cycle de vie Android
+En cas de déconnexion :
+- la partie se met en pause ;
+- aucune progression divergente n’est autorisée ;
+- une courte tentative de reconnexion peut être faite ;
+- en cas d’échec, la partie est abandonnée proprement.
 
-V7.1 ajoute les dépendances Google Play services nécessaires à Nearby Connections.
+La reprise persistante après fermeture complète de l’app est hors périmètre V7.1.
 
-Les permissions exactes doivent suivre la documentation Android/Nearby correspondant au niveau API ciblé au moment de l’implémentation.
+## 15. Versionnement
 
-Principes UX :
-- demander les permissions uniquement à l’entrée du mode `Duel local` ;
-- expliquer brièvement qu’elles servent à trouver l’autre téléphone ;
-- si une permission est refusée, le solo continue de fonctionner normalement ;
-- aucun écran de permission au lancement de l’application.
-
-Nearby advertising / discovery doivent être arrêtés dès qu’ils ne sont plus utiles afin de limiter batterie et exposition radio.
-
-## 11. Déconnexion / erreurs
-
-V7.1 privilégie un comportement simple et sûr.
-
-Si un joueur quitte volontairement :
-- message `PLAYER_LEFT` lorsque possible ;
-- retour au lobby / accueil ;
-- partie locale abandonnée.
-
-Si la connexion tombe pendant une partie :
-- afficher `Connexion perdue` ;
-- ne jamais continuer localement avec des états divergents ;
-- V7.1 peut proposer une courte tentative automatique de reconnexion ;
-- si la reconnexion n’aboutit pas, la partie est abandonnée proprement.
-
-La reprise persistante d’une partie après fermeture complète de l’application est hors périmètre V7.1.
-
-## 12. Compatibilité et versionnement
-
-Version Android proposée :
-- `versionCode = 5`
-- `versionName = 1.3.0`
+Proposition :
+- `versionCode = 5` ;
+- `versionName = 1.3.0` ;
+- `protocolVersion = 1`.
 
 Conserver impérativement :
-- `applicationId = fr.electronlibre.quizlibre`
-- la même clé de signature permanente que V6/V6.1/V7.
+- `applicationId = fr.electronlibre.quizlibre` ;
+- la clé de signature permanente existante.
 
-Le protocole possède son propre numéro :
-- `protocolVersion = 1` pour V7.1.
+## 16. Tests et critères d’acceptation
 
-Si deux installations ont des versions de protocole incompatibles, la connexion doit être refusée avec un message utilisateur clair plutôt que de lancer une partie potentiellement désynchronisée.
+Les tests doivent couvrir au minimum :
+- 3 catégories distinctes et alternées raisonnablement ;
+- alternance hôte/invité sur 6 manches ;
+- 3 questions distinctes sans répétition dans la partie ;
+- snapshot identique des deux côtés ;
+- score du premier impossible à lire avant la fin du second ;
+- révélation après exactement 3 réponses du second ;
+- score final identique sur les deux appareils ;
+- victoire / défaite / égalité ;
+- protocole incompatible rejeté ;
+- messages hors ordre rejetés ;
+- nettoyage des ressources Nearby ;
+- build Android release ;
+- 1000 questions toujours embarquées ;
+- solo fonctionnel sans permission multi ;
+- mise à jour depuis V7 sans désinstallation ;
+- statistiques solo conservées ;
+- test réel complet sur deux téléphones.
 
-## 13. Tests obligatoires
+## 17. Évolution future
 
-### Tests JavaScript / logique
-- alternance correcte du joueur qui choisit la catégorie ;
-- trois catégories distinctes ;
-- évitement du trio précédent ;
-- trois questions distinctes ;
-- absence de question rejouée dans la partie ;
-- même snapshot de questions des deux côtés ;
-- score du premier masqué tant que le second n’a pas terminé ;
-- révélation après exactement trois réponses du second ;
-- score cumulé correct ;
-- six manches ;
-- fin sur victoire / défaite / égalité.
+### Internet
 
-### Tests Kotlin / protocole
-- sérialisation / désérialisation ;
-- rejet d’un `protocolVersion` incompatible ;
-- rejet des messages hors ordre ;
-- validation des champs obligatoires ;
-- rôle hôte autoritaire ;
-- aucun score adverse divulgué avant `ROUND_REVEAL` ;
-- fermeture propre des ressources Nearby.
+Conserver la machine d’état et le protocole, remplacer le transport Nearby par un backend. Cela permettra les parties différées, comptes, invitations, notifications et matchmaking. Supabase reste une option possible, sans être verrouillé dans V7.1.
 
-### Tests Android / CI
-- build release ;
-- versionCode / versionName ;
-- applicationId inchangé ;
-- les 1000 questions toujours embarquées ;
-- le solo toujours disponible sans permissions Nearby ;
-- assets du multijoueur embarqués offline ;
-- absence de dépendance à un serveur pour V7.1.
+### iOS
 
-### Tests réels sur téléphones
-- installation en mise à jour depuis V7 sans désinstallation ;
-- conservation des statistiques solo ;
-- création / découverte du duel ;
-- vérification du code ;
-- partie complète 6 manches ;
-- score caché puis révélé au bon moment ;
-- mise en veille / retour application raisonnable ;
-- coupure Bluetooth/Wi-Fi pendant une partie ;
-- abandon volontaire ;
-- fonctionnement du solo après refus des permissions multi.
+Réutiliser le contenu HTML/JS et le protocole dans une coque Swift/WKWebView. Le transport pourra être Nearby en local ou le backend Internet.
 
-## 14. Évolution future — multijoueur Internet
+## 18. Décision restante avant le plan
 
-Le futur mode à distance ne doit pas être une réécriture du duel.
-
-Le plan cible :
-- conserver la machine d’état ;
-- conserver les messages du protocole ;
-- remplacer `NearbyTransport` par un transport réseau/backend ;
-- stocker les parties côté serveur ;
-- permettre un tour différé de plusieurs minutes / heures / jours ;
-- comptes / pseudos durables ;
-- invitations ;
-- notifications ;
-- matchmaking éventuel.
-
-Un backend de type Supabase est une option naturelle, mais il n’est pas choisi définitivement dans V7.1.
-
-## 15. Évolution future — iOS
-
-Le protocole ne doit utiliser aucun concept spécifique à Kotlin.
-
-La version iOS pourra :
-- réutiliser le contenu HTML/JS et la banque de questions ;
-- utiliser une coque Swift / WKWebView ;
-- implémenter le même protocole ;
-- utiliser Nearby Connections en local ou le futur backend pour les duels Internet.
-
-## 16. Critères d’acceptation V7.1
-
-V7.1 est considérée comme prête à valider lorsque :
-1. deux téléphones Android peuvent se connecter localement ;
-2. la connexion est explicitement vérifiée par les joueurs ;
-3. une partie complète de 6 manches fonctionne ;
-4. chaque manche propose 3 catégories au joueur qui a la main ;
-5. le choix de catégorie alterne ;
-6. les deux joueurs reçoivent exactement les mêmes 3 QCM ;
-7. le résultat du premier reste invisible au second jusqu’à sa troisième réponse ;
-8. la révélation de manche est identique sur les deux téléphones ;
-9. le score final est cohérent sur les deux appareils ;
-10. le mode solo n’a aucune régression ;
-11. les statistiques solo existantes sont conservées après mise à jour ;
-12. l’APK release reste signée avec la clé permanente existante.
+Le design ne fixe pas encore une limite de temps par question. Ce choix doit être confirmé avant l’implémentation, car il influence la machine d’état, les tests et l’expérience de duel.
